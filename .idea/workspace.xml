@@ -4,7 +4,82 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c426a248-9593-4c64-a812-0cae3c0e6bc0" name="Changes" comment="" />
+    <list default="true" id="c426a248-9593-4c64-a812-0cae3c0e6bc0" name="Changes" comment="init">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/Game/AutoMode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/Game/BotLeader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/Game/Direction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/Game/DuelMode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/Game/Game.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/Game/Hex.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/Game/Leader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/Game/Minion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/Game/Pair.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/Game/PlayerLeader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/AllyExpression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/AssignmentStatement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/AttackCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/BlockStatement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/DoneCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/Executable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/Expression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/Identifier.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/IfStatement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/InfoExpression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/IntegerLiteral.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/LeftAssociativeBinaryExpression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/MoveCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/NearbyExpression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/Node.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/OpponentExpression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/Parser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/RightAssociativeBinaryExpression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/Statement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/Strategy.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/StrategyParser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/StrategyTokenizer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/Tokenizer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/KOMBAT/MinionStrategy/WhileStatement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/Game/AutoMode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/Game/BotLeader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/Game/Direction.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/Game/DuelMode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/Game/Game$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/Game/Game.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/Game/Hex.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/Game/Leader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/Game/Minion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/Game/Pair.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/Game/PlayerLeader.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/AllyExpression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/AssignmentStatement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/AttackCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/BlockStatement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/DoneCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/Executable.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/Expression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/Identifier$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/Identifier.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/IfStatement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/InfoExpression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/IntegerLiteral.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/LeftAssociativeBinaryExpression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/MoveCommand.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/NearbyExpression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/Node.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/OpponentExpression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/Parser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/RightAssociativeBinaryExpression.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/Statement.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/Strategy.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/StrategyParser$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/StrategyParser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/StrategyTokenizer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/Tokenizer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/kombat_proj/MinionStrategy/WhileStatement.class" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -38,7 +113,7 @@
     "Repository.Attach.JavaDocs": "false",
     "Repository.Attach.Sources": "false",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "ParserNEVal",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "D:/kombat_proj",
     "node.js.detected.package.eslint": "true",
@@ -47,11 +122,15 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "onboarding.tips.debug.path": "D:/OOP/KOMBAT/src/Main.java",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.14941406",
+    "project.structure.side.proportion": "0.2",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\kombat_proj" />
       <recent name="D:\OOP\KOMBAT" />
     </key>
   </component>
@@ -87,6 +166,10 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="init" />
+    <option name="LAST_COMMIT_MESSAGE" value="init" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
