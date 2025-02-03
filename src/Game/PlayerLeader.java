@@ -5,8 +5,8 @@ public class PlayerLeader extends Leader {
 
     List<Minion> minions;
 
-    public PlayerLeader(Game game, String leaderName) {
-        super(game, leaderName);
+    public PlayerLeader(Game game, String leaderName,String topordown) {
+        super(game, leaderName,topordown);
     }
 
     @Override

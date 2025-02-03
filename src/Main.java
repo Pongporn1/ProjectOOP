@@ -3,7 +3,7 @@ import MinionStrategy.*;
 
 public class Main {
     public static void main(String[] args) {
-        String s = """
+       /** String s = """
                 if (t % 10 - 5) then move upleft
                 else if(t % 10 - 4) then move downleft
                 else if(t % 10 - 3) then move down
@@ -11,22 +11,23 @@ public class Main {
                 else if(t % 10 - 1) then move upright
                 else move up
                 t = t + 1
-                """;
-        try {
-            StrategyParser parse = new StrategyParser(s);
-            Strategy strategy = parse.parse();
-            StringBuilder sb = new StringBuilder();
-            strategy.prettyPrint(sb);
-            System.out.println(sb);
+                """; */
+       // try {
+            //StrategyParser parse = new StrategyParser(s);
+            //Strategy strategy = parse.parse();
+            //StringBuilder sb = new StringBuilder();
+            //strategy.prettyPrint(sb);
+            ///System.out.println(sb);
             Game game = new DuelMode();
             Leader p1 = game.getFirstLeader();
-            Minion m = new Minion(strategy);
+            System.out.println(p1.getName());
+            /*Minion m = new Minion(strategy);
             for(int i = 0; i < 10; i++) {
                 System.out.println(m.getPosition());
                 m.execute();
             }
         } catch (Exception e) {
-            System.out.println(e);
-        }
+            System.out.println(e);*/
+       // }
     }
 }
