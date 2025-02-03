@@ -20,6 +20,11 @@ public class Minion {
         this.strategy = strategy;
     }
 
+    public Minion(int frist, int second , Leader owner) {
+        this.owner = owner;
+        position = new Pair<>(frist, second);
+    }
+
     public void execute() throws Exception {
         strategy.execute(this);
     }
