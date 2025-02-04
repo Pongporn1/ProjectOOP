@@ -12,6 +12,7 @@ public class DuelMode extends Game{
         for(int i = 0; i < 2; i++){
             for(int j = 0; j < 3 - i; j++){
                 setGridOwner(i, j, leader1);
+                leader1.addOwnHex(Pair.of((long)i, (long)j));
             }
         }
 
@@ -19,6 +20,7 @@ public class DuelMode extends Game{
         for(int i = 7; i > 5; i--){
             for(int j = 7; j > 11 - i; j--){
                 setGridOwner(i, j, leader2);
+                leader2.addOwnHex(Pair.of((long)i, (long)j));
             }
         }
         printOwnerBoard();
