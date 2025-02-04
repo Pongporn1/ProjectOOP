@@ -10,12 +10,14 @@ public class DuelMode extends Game{
         System.out.println("-----------------------------");
         Minion m = new Minion(1,1,leader1);
         Minion n = new Minion(6,6,leader2);
-        setMiniononhex(m,leader1,1,1);
-        setMiniononhex(n,leader2,6,6);
+        //setMiniononhex(m,leader1,1,1);
+        //setMiniononhex(n,leader2,6,6);
+        //leader1.setBuyableHexes();
         this.printBoard2();
         System.out.println("------------------------------");
         System.out.println(board[1][1].removeMinionOnHex());
         this.printBoard2();
-        //this.gameloop
+        //leader1.turnBegin(1);
+        this.gameloop();
     }
 }
