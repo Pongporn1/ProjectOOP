@@ -3,7 +3,7 @@ import Game.*;
 public record IntegerLiteral(int value) implements Expression {
 
     @Override
-    public int evaluate(Minion minion) {
+    public long evaluate(Minion minion) {
         return value;
     }
 
