@@ -12,7 +12,7 @@ public class LeftAssociativeBinaryExpression implements Expression {
     }
 
     @Override
-    public int evaluate(Minion minion) throws Exception {
+    public long evaluate(Minion minion) throws Exception {
         return switch (operator){
             case "+" -> left.evaluate(minion) + right.evaluate(minion);
             case "-" -> left.evaluate(minion) - right.evaluate(minion);
