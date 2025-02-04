@@ -64,6 +64,11 @@ public class Hex {
         return leaderOwner.topordown;
     }
 
+    public String ownerString() {
+        if(!hasOwner()) return "_";
+        return leaderOwner.topordown;
+    }
+
     @Override
    public String toString() {
  if(leaderOwner == null){
