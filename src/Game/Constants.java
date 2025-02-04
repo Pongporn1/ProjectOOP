@@ -7,4 +7,5 @@ public class Constants {
     public static  double max_budget = 3000;
     public static  double turn_income = 400;
     public static  int interest = 5;
+    public static  double start_budget = 1000;
 }

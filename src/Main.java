@@ -20,7 +20,7 @@ public class Main {
             ///System.out.println(sb);
             Game game = new DuelMode();
             Leader p1 = game.getFirstLeader();
-            System.out.println(p1.getName());
+
             /*Minion m = new Minion(strategy);
             for(int i = 0; i < 10; i++) {
                 System.out.println(m.getPosition());

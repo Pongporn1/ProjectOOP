@@ -53,7 +53,7 @@ public class Hex {
 
 
         }
-        //add something
+        //for board with minion
     }
 
     @Override
@@ -65,6 +65,6 @@ public class Hex {
      else if (leaderOwner.topordown == "D") {return "b";}
      else{return "e";}
  }
- //add something
+ //for board with owned hex
     }
 }

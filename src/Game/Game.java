@@ -9,7 +9,7 @@ public abstract class Game {
     protected Map<String, Integer> settings = new HashMap<String, Integer>();
     protected Minion[] minionsKind;
 
-    protected int turn;
+    protected int turn = 1;
 
     public Game() {
         board = new Hex[8][8];
@@ -22,11 +22,30 @@ public abstract class Game {
     }
 
     public void GameSet() {
-        for (int i = 0; i < 3; i++) {board[0][i].setOwner(leader1);}
-        for (int i = 0; i < 2; i++) {board[1][i].setOwner(leader1);}
-        for (int i = 6; i < 8; i++) {board[6][i].setOwner(leader2);}
-        for (int i = 5; i < 8; i++) {board[7][i].setOwner(leader2);}
+        for (int i = 0; i < 3; i++) {board[0][i].setOwner(leader1);leader1.ownHexes.add(Pair.of(0, i));}
+        for (int i = 0; i < 2; i++) {board[1][i].setOwner(leader1);leader1.ownHexes.add(Pair.of(1, i));}
+        //Pair<Integer,Integer> AAA = new Pair<>(0,1);
+        //Pair<Integer,Integer> AAAA = new Pair<>(1,1);
+        //board[0][1].setOwner(leader1);//leader1.setOwnHexes(AAA);
+        //System.out.println("test "+leader1.ownHexes.contains(AAA));
+        ///board[1][1].setOwner(leader1);//leader1.setOwnHexes(AAAA);
 
+        for (int i = 6; i < 8; i++) {board[6][i].setOwner(leader2);leader2.ownHexes.add(Pair.of(6, i));}
+        for (int i = 5; i < 8; i++) {board[7][i].setOwner(leader2);leader2.ownHexes.add(Pair.of(7, i));}
+
+    }
+    public void gameloop() {
+        for (int i = 1; i <= 2/*Constants.max_turn*/; i++) { //use 2 for test
+            System.out.println("player1turn:"+ turn);
+        leader1.turnBegin(i);
+        leader1.turnEnd();
+            System.out.println("player2 turn:" + turn);
+        leader2.turnBegin(i);
+        leader2.turnEnd();
+
+
+
+        }
     }
 
     public void setMiniononhex(Minion minion,Leader leader,int row,int col) {
@@ -107,7 +126,7 @@ public abstract class Game {
                 System.out.print(board[i][j].toString());
             }
             System.out.println();
-        }// more mod
+        }// for board only
     }
 
     public void printBoard2() {
