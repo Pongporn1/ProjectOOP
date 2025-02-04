@@ -22,7 +22,7 @@ public abstract class Game {
 
 
     public Game(Map<String, Strategy> minionStrategies) {
-        this(minionStrategies,8, 8);
+        this(minionStrategies, 8, 8);
     }
 
     public Game(Map<String, Strategy> minionStrategies, int rowAmount, int colAmount) {
@@ -36,12 +36,13 @@ public abstract class Game {
                 board[i][j] = new Hex();
             }
         }
+    }
 
-    public void beginGame(){
+    public void beginGame() {
         currentTurnOfLeader = leader1;
     }
 
-    public void loadConfiguration(){
+    public void loadConfiguration() {
         //region Configuration File Read
         //https://www.w3schools.com/java/java_files_read.asp
         try {
@@ -59,28 +60,39 @@ public abstract class Game {
     }
 
     public void GameSet() {
-        for (int i = 0; i < 3; i++) {board[0][i].setOwner(leader1);leader1.ownHexes.add(Pair.of(0, i));}
-        for (int i = 0; i < 2; i++) {board[1][i].setOwner(leader1);leader1.ownHexes.add(Pair.of(1, i));}
+        for (int i = 0; i < 3; i++) {
+            board[0][i].setOwner(leader1);
+            leader1.ownHexes.add(Pair.of(0L, (long) i));
+        }
+        for (int i = 0; i < 2; i++) {
+            board[1][i].setOwner(leader1);
+            leader1.ownHexes.add(Pair.of(1L, (long) i));
+        }
         //Pair<Integer,Integer> AAA = new Pair<>(0,1);
         //Pair<Integer,Integer> AAAA = new Pair<>(1,1);
         //board[0][1].setOwner(leader1);//leader1.setOwnHexes(AAA);
         //System.out.println("test "+leader1.ownHexes.contains(AAA));
         ///board[1][1].setOwner(leader1);//leader1.setOwnHexes(AAAA);
 
-        for (int i = 6; i < 8; i++) {board[6][i].setOwner(leader2);leader2.ownHexes.add(Pair.of(6, i));}
-        for (int i = 5; i < 8; i++) {board[7][i].setOwner(leader2);leader2.ownHexes.add(Pair.of(7, i));}
-
+        for (int i = 6; i < 8; i++) {
+            board[6][i].setOwner(leader2);
+            leader2.ownHexes.add(Pair.of(6L, (long) i));
+        }
+        for (int i = 5; i < 8; i++) {
+            board[7][i].setOwner(leader2);
+            leader2.ownHexes.add(Pair.of(7L, (long) i));
+        }
     }
-    public void gameloop() {
+
+    public void gameloop() throws Exception {
         for (int i = 1; i <= 2/*Constants.max_turn*/; i++) { //use 2 for test
-            System.out.println("player1turn:"+ turn);
-        leader1.turnBegin(i);
-        leader1.turnEnd();
+            System.out.println("player1 turn:" + turn);
+            leader1.turnBegin(turn);
+            leader1.turnEnd();
             System.out.println("player2 turn:" + turn);
-        leader2.turnBegin(i);
-        leader2.turnEnd();
-
-
+            leader2.turnBegin(turn);
+            leader2.turnEnd();
+            turn++;
 
         }
     }
@@ -117,12 +129,12 @@ public abstract class Game {
     }
 
     public boolean buyHexAt(Leader buyer, long row, long col) throws Exception {
-        if(isHexOccupied(row, col)) return false;
-        return board[(int)row][(int)col].setOwner(buyer);
+        if (isHexOccupied(row, col)) return false;
+        return board[(int) row][(int) col].setOwner(buyer);
     }
 
     public boolean isHexOccupied(long row, long col) throws Exception {
-        return getHexAt((int)row, (int)col).hasOwner();
+        return getHexAt((int) row, (int) col).hasOwner();
     }
 
     public boolean moveMinionByOffset(Minion minion, Pair<Long, Long> offset) throws Exception {
@@ -287,7 +299,7 @@ public abstract class Game {
 
     public Minion placeMinion(long row, long col, String minionType, Leader owner) {//??????
         Minion minion = new Minion(this, minionStrategies.get(minionType), Pair.of(row, col), owner, minionType);
-        getHexAt((int)row, (int)col).setMinionOnHex(minion);
+        getHexAt((int) row, (int) col).setMinionOnHex(minion);
         return minion;
     }
 
@@ -309,21 +321,21 @@ public abstract class Game {
         }// more mod
     }
 
-    public void printOwnerBoard(){
-        for(int i = 0; i < rowAmount; i++){
-            for(int j = 0; j < colAmount; j++){
+    public void printOwnerBoard() {
+        for (int i = 0; i < rowAmount; i++) {
+            for (int j = 0; j < colAmount; j++) {
                 System.out.print(board[i][j].ownerString());
             }
             System.out.println();
         }
     }
 
-    public void printMinionBoard(){
-        for(int i = 0; i < rowAmount; i++){
-            for(int j = 0; j < colAmount; j++){
+    public void printMinionBoard() {
+        for (int i = 0; i < rowAmount; i++) {
+            for (int j = 0; j < colAmount; j++) {
                 Minion m = board[i][j].getMinionOnGrid();
                 if (m == null) System.out.print("_ ");
-                else System.out.print(m+ " ");
+                else System.out.print(m + " ");
             }
             System.out.println();
         }

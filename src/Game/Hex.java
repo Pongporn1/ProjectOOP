@@ -21,7 +21,7 @@ public class Hex {
         return leaderOwner;
     }
 
-    public boolean hasOwner(){
+    public boolean hasOwner() {
         return leaderOwner != null;
     }
 
@@ -48,36 +48,37 @@ public class Hex {
         return minionOnGrid;
     }
 
-
     public String toString2() {
-        if(hasminion == false){
+        if (hasminion == false) {
             return "O";
-        }else{
-            if(minionOnGrid.getOwner().topordown == "T"){return "X";}
-            else{return "Y";}
+        } else {
+            if (minionOnGrid.getOwner().topordown == "T") {
+                return "X";
+            } else {
+                return "Y";
+            }
         }
         //for board with minion
     }
 
     public String ownerString() {
-        if(!hasOwner()) return "_";
-        return leaderOwner.topordown;
-    }
-
-    public String ownerString() {
-        if(!hasOwner()) return "_";
+        if (!hasOwner()) return "_";
         return leaderOwner.topordown;
     }
 
     @Override
-   public String toString() {
- if(leaderOwner == null){
-     return "O";
- }else{
-     if(leaderOwner.topordown == "T"){return "a";}
-     else if (leaderOwner.topordown == "D") {return "b";}
-     else{return "e";}
- }
- //for board with owned hex
+    public String toString() {
+        if (leaderOwner == null) {
+            return "O";
+        } else {
+            if (leaderOwner.topordown == "T") {
+                return "a";
+            } else if (leaderOwner.topordown == "D") {
+                return "b";
+            } else {
+                return "e";
+            }
+        }
+        //for board with owned hex
     }
 }
