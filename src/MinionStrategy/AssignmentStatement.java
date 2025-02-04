@@ -3,8 +3,8 @@ import Game.Minion;
 
 public class AssignmentStatement extends Statement {
 
-    String variable;
-    Expression expression;
+    private String variable;
+    private Expression expression;
 
     public AssignmentStatement(String variable, Expression expression) {
         this.variable = variable;
@@ -13,7 +13,10 @@ public class AssignmentStatement extends Statement {
 
     @Override
     public boolean execute(Minion target) throws Exception {
-        target.setVariable(variable, expression.evaluate(target));
+        if(Character.isUpperCase(variable.charAt(0)))
+            target.getOwner().setGlobalVariable(variable, expression.evaluate(target));
+        else
+            target.setVariable(variable, expression.evaluate(target));
         return true;
     }
 

@@ -10,19 +10,30 @@ public class Minion {
     private String minionType;
     private Leader owner;
     private int health, defense;
-    private Map<String, Integer> variables = new HashMap<>();
-    private Pair<Integer, Integer> position;
+    private Map<String, Long> variables = new HashMap<>();
+    private Pair<Long, Long> position;
     private Strategy strategy;
     private Game game;
 
-    public Minion(Strategy strategy) {
-        position = new Pair<>(5, 5);
+    public Minion(Game game, Strategy strategy, Pair<Long, Long> position, Leader owner, String minionType) {
+        this.game = game;
+        this.minionType = minionType;
         this.strategy = strategy;
+        this.owner = owner;
+        this.position = position;
     }
 
-    public Minion(int frist, int second , Leader owner) {
-        this.owner = owner;
-        position = new Pair<>(frist, second);
+//    public Minion(String minionType, Leader owner) {
+//
+//    }
+
+//    public Minion(long frist, long second , Leader owner) {
+//        //this.owner = owner;
+//        //position = new Pair<>(frist, second);
+//    }
+
+    public Game getGame(){
+        return game;
     }
 
     public void execute() throws Exception {
@@ -54,31 +65,39 @@ public class Minion {
     }
 
     public boolean move(Direction direction) throws Exception {
-        Pair<Integer, Integer> transform = (direction.transformDirection()).apply(position.getSecond());
-        position.setFirst(position.getFirst() + transform.getFirst());
-        position.setSecond(position.getSecond() + transform.getSecond());
-        return true;
+        Pair<Long, Long> transform = (direction.transformDirection()).apply(position.getSecond());
+        try {
+            if (game.moveMinionByOffset(this, transform)) {
+                position.setFirst(position.getFirst() + transform.getFirst());
+                position.setSecond(position.getSecond() + transform.getSecond());
+                return true;
+            }
+        }catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+        return false;
     }
 
     public Leader getOwner() {
         return owner;
     }
 
-    public Pair<Integer, Integer> getPosition() {
+    public Pair<Long, Long> getPosition() {
         return position;
     }
 
     @Override
     public String toString() {
-        return minionType;
+        return owner.topordown+":"+minionType;
     }
 
-    public int getVariable(String variable) {
-        if (!variables.containsKey(variable)) variables.put(variable, 0);
+    public long getVariable(String variable) {
+        if (!variables.containsKey(variable)) variables.put(variable, 0L);
         return variables.get(variable);
     }
 
-    public void setVariable(String variable, int value) {
+    public void setVariable(String variable, long value) {
         variables.put(variable, value);
     }
 }
