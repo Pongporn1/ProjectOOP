@@ -7,14 +7,15 @@ public abstract class Leader {
     protected String leaderName;
     public String topordown;
     private List<Minion> ownedMinions = new ArrayList<Minion>();
-    private double budget=1000;
-    private Map<String, Integer> globalVariables = new HashMap<>();
-    public List<Pair<Integer, Integer>> ownHexes = new ArrayList<>();
-    private List<Pair<Integer, Integer>> buyableHexes = new ArrayList<>();   ///???
+    private double budget;
+    private Map<String, Long> globalVariables = new HashMap<>();
+    private List<Pair<Long, Long>> ownHexes = new ArrayList<>();
     private Game game;
+    private long turnCount;
 
     public Leader(Game game, String leaderName ,String topordown) {
         this.game = game;
+        this.budget = game.getSettingValue("init_budget");
         this.leaderName = leaderName;
         this.topordown = topordown;
     }
@@ -25,7 +26,7 @@ public abstract class Leader {
         }
     }
 
-    public int getSpawnRemain(){
+    public long getSpawnRemain(){
         return game.getSettingValue("max_spawns") - ownedMinions.size();
     }
 
@@ -113,21 +114,27 @@ public abstract class Leader {
        game.printBoard2();
     }
 
-    public boolean buyHex(Pair<Integer, Integer> hexPosition){ //tempo Pair<Integer, Integer> hexPosition
-        System.out.println("hi1");
-        if(budget>=Constants.hex_price /*&& buyableHexes.contains(hexPosition)ยังทำงานไมู่ก*/) {
-            System.out.println("hi2");
-            game.board[hexPosition.getFirst()][hexPosition.getSecond()].setOwner(this);
-            budget -= Constants.hex_price;
-            ownHexes.add(Pair.of(hexPosition.getFirst(), hexPosition.getSecond()));
-           //buyableHexes.clear();
-           // setBuyableHexes();
+    public void buyMinionStage(){
 
-            return true;
-        }
+    }
 
+    public boolean buyHex(Pair<Long, Long> hexPosition) throws Exception { //tempo Pair<Integer, Integer> hexPosition
+        if (budget < game.getSettingValue("hex_purchase_cost")
+            || game.hasMinionAt(hexPosition.getFirst(), hexPosition.getSecond())
+                || game.getHexAt(hexPosition).hasOwner())
+            return false;
 
-        return false;
+        budget -= game.getSettingValue("hex_purchase_cost");
+        game.buyHexAt(this, hexPosition.getFirst(), hexPosition.getSecond());
+        ownHexes.add(Pair.of(hexPosition.getFirst(), hexPosition.getSecond()));
+        return true;
+
+//        if(budget>=Constants.hex_price){
+//            budget -= Constants.hex_price;
+//            //ownHexes.add(Pair.of(hexPosition.getFirst(), hexPosition.getSecond()));
+//            return true;
+//        }
+//        return false;
     }
 
     public void setOwnHexes(Pair<Integer, Integer> ownHexes) {
@@ -138,31 +145,64 @@ public abstract class Leader {
         return game;
     }
 
-    public boolean buyMinionAndPlaceAt(Pair<Integer, Integer> hexPosition, Minion minion) /*throws Exception */{
-        if(budget>=Constants.minion_price /*&& ownHexes.contains(Pair.of(hexPosition.getFirst(), hexPosition.getSecond()))*/){//equal
-            budget -= Constants.minion_price;
-            Minion M01 = new Minion(hexPosition.getFirst(), hexPosition.getSecond() , this);
-
-            ownedMinions.add(M01);
-            game.setMiniononhex(M01,this,hexPosition.getFirst(),hexPosition.getSecond());
-
-            return true;
-        }
-        return false;
+    public void setGlobalVariable(String name, long value){
+        globalVariables.put(name, value);
     }
 
-    public int getInterest(){
-        return (int) budget*Constants.interest/100; //need fix
+    public long getGlobalVariable(String name){
+        if (!globalVariables.containsKey(name)) globalVariables.put(name, 0L);
+        return globalVariables.get(name);
     }
 
-    public int getBudget(){
-        return (int)budget;
+    public boolean buyMinionAndPlaceAt(Pair<Long, Long> hexPosition, String minionType) throws Exception {
+        if(budget < game.getSettingValue("spawn_cost")
+            || game.hasMinionAt(hexPosition.getFirst(), hexPosition.getSecond())
+                || !game.getHexAt(hexPosition).getLeader().equals(this)
+        ) return false;
+
+        budget -= game.getSettingValue("spawn_cost");
+        Minion m = game.placeMinion(hexPosition.getFirst(), hexPosition.getSecond(), minionType, this);
+        ownedMinions.add(m);
+        return true;
+
+//        if(budget>=Constants.minion_price && ownHexes.contains(Pair.of(hexPosition.getFirst(), hexPosition.getSecond()))){
+//            budget -= Constants.minion_price;
+//            Minion M01 = new Minion(hexPosition.getFirst(), hexPosition.getSecond() , this);
+//
+//            ownedMinions.add(M01);
+//            return true;
+//        }
+//        return false;
+    }
+
+    private double calculateInterestPercentage(){
+        boolean DONT_HAVE_BUDGET = budget == 0;
+        long baseInterest = game.getSettingValue("interest_pct");
+        if (DONT_HAVE_BUDGET) return 0;
+        return baseInterest * Math.log10(budget) * Math.log(turnCount);
+    }
+
+    private double calculateInterest(){
+        return calculateInterestPercentage() * budget / 100.0;
+    }
+
+    public long getInterest(){
+
+        return (long)calculateInterest();
+    }
+
+    public long getBudget(){
+        return (long)budget;
     }
 
     public double BudgetplusCal(){
         budget += getInterest();
         budget += Constants.turn_income;
         return (int)budget;
+    }
+
+    private void receiveInterest(){
+        budget = Math.max(game.getSettingValue("max_budget"), budget + calculateInterest());
     }
 
     public List<Minion> getOwnedMinions(){
