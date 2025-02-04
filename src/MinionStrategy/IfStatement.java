@@ -14,9 +14,8 @@ public class IfStatement extends Statement {
 
     @Override
     public boolean execute(Minion target) throws Exception {
-        if (condition.evaluate(target) > 0) trueStatement.execute(target);
-        else falseStatement.execute(target);
-        return true;
+        if (condition.evaluate(target) > 0) return trueStatement.execute(target);
+        else return falseStatement.execute(target);
     }
 
     @Override

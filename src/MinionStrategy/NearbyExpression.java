@@ -10,7 +10,7 @@ public class NearbyExpression extends InfoExpression{
     }
 
     @Override
-    public int evaluate(Minion minion) throws Exception {
+    public long evaluate(Minion minion) throws Exception {
         return minion.getNearby(direction);
     }
 

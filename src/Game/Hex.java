@@ -21,11 +21,16 @@ public class Hex {
         return leaderOwner;
     }
 
-    public void setMinionOnHex(Minion minion) {
-        if(leaderOwner != null) {
+    public boolean hasOwner(){
+        return leaderOwner != null;
+    }
+
+    public boolean setMinionOnHex(Minion minion) {
+        //if(leaderOwner != null) {
         minionOnGrid = minion;
-        hasminion = true;
-        }
+        //hasminion = true;
+        //}
+        return true;
     }
 
     public boolean removeMinionOnHex() {
@@ -50,10 +55,13 @@ public class Hex {
         }else{
             if(minionOnGrid.getOwner().topordown == "T"){return "X";}
             else{return "Y";}
-
-
         }
         //add something
+    }
+
+    public String ownerString() {
+        if(!hasOwner()) return "_";
+        return leaderOwner.topordown;
     }
 
     @Override

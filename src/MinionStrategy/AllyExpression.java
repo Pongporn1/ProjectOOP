@@ -4,7 +4,7 @@ import Game.Minion;
 public class AllyExpression extends InfoExpression{
 
     @Override
-    public int evaluate(Minion minion) throws Exception {
+    public long evaluate(Minion minion) throws Exception {
         return minion.getAlly();
     }
 

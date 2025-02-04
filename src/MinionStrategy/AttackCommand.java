@@ -16,7 +16,7 @@ public class AttackCommand extends Statement{
         long cost = expression.evaluate(target) + 1;
         if(target.getOwner().getBudget() < cost)
             throw new Exception("Have not enough budget to shoot at: " + cost);
-        
+        target.attack(direction, cost);
         return false;
     }
 

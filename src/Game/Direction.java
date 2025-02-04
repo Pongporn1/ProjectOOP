@@ -16,15 +16,15 @@ public enum Direction {
         return direction;
     }
 
-    public Function<Integer, Pair<Integer, Integer>> transformDirection() throws Exception {
+    public Function<Long, Pair<Long, Long>> transformDirection() throws Exception {
         return switch (direction) {
-            case "up" -> (colum) -> new Pair<>(-1, 0);
-            case "down" -> (colum) -> new Pair<>(1, 0);
-            case "upleft" -> (colum) -> colum % 2 == 0 ? new Pair<>(-1, -1) : new Pair<>(0, -1);
-            case "upright" -> (colum) -> colum % 2 == 0 ? new Pair<>(-1, 1) : new Pair<>(0, 1);
-            case "downleft" -> (colum) -> colum % 2 == 0 ? new Pair<>(0, -1) : new Pair<>(1, -1);
-            case "downright" -> (colum) -> colum % 2 == 0 ? new Pair<>(0, 1) : new Pair<>(1, 1);
-            default -> throw new Exception("");
+            case "up" -> (colum) -> new Pair<>(-1L, 0L);
+            case "down" -> (colum) -> new Pair<>(1L, 0L);
+            case "upleft" -> (colum) -> new Pair<>(-1L + colum % 2, -1L);
+            case "upright" -> (colum) -> new Pair<>(-1L + colum % 2, 1L);
+            case "downleft" -> (colum) -> new Pair<>(colum % 2, -1L) ;
+            case "downright" -> (colum) ->  new Pair<>(colum % 2, 1L) ;
+            default -> throw new Exception("from Direction.tranformDirection, unknown direction: " + direction);
         };
     }
 }
