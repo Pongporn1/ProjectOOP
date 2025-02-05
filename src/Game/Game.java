@@ -85,7 +85,7 @@ public abstract class Game {
     }
 
     public void gameloop() throws Exception {
-        for (int i = 1; i <= 2/*Constants.max_turn*/; i++) { //use 2 for test
+        for (int i = 1; i <= 5/*Constants.max_turn*/; i++) { //use 2 for test
             System.out.println("player1 turn:" + turn);
             leader1.turnBegin(turn);
             leader1.turnEnd();
@@ -202,14 +202,14 @@ public abstract class Game {
             case Direction.UP -> {
                 long col = pos.getFirst() - distance;
                 long row = pos.getSecond();
-                if (col > colAmount || col < 0 || row > rowAmount || row < 0)
+                if (col >= colAmount || col < 0 || row >= rowAmount || row < 0)
                     throw new Exception("Position out of bound");
                 return new Pair<>(col, row);
             }
             case Direction.DOWN -> {
                 long col = pos.getFirst() + distance;
                 long row = pos.getSecond();
-                if (col > colAmount || col < 0 || row > rowAmount || row < 0)
+                if (col >= colAmount || col < 0 || row >= rowAmount || row < 0)
                     throw new Exception("Position out of bound");
                 return new Pair<>(col, row);
             }
@@ -220,7 +220,7 @@ public abstract class Game {
                     col--;
                     if (col % 2 == 1) row++;
                 }
-                if (col > colAmount || col < 0 || row > rowAmount || row < 0)
+                if (col >= colAmount || col < 0 || row >= rowAmount || row < 0)
                     throw new Exception("Position out of bound");
                 return new Pair<>(col, row);
             }
@@ -231,7 +231,7 @@ public abstract class Game {
                     col++;
                     if (col % 2 == 1) row++;
                 }
-                if (col > colAmount || col < 0 || row > rowAmount || row < 0)
+                if (col >= colAmount || col < 0 || row >= rowAmount || row < 0)
                     throw new Exception("Position out of bound");
                 return new Pair<>(col, row);
             }
@@ -242,7 +242,7 @@ public abstract class Game {
                     col--;
                     if (col % 2 == 1) row--;
                 }
-                if (col > colAmount || col < 0 || row > rowAmount || row < 0)
+                if (col >= colAmount || col < 0 || row >= rowAmount || row < 0)
                     throw new Exception("Position out of bound");
                 return new Pair<>(col, row);
             }
@@ -253,7 +253,7 @@ public abstract class Game {
                     col++;
                     if (col % 2 == 1) row--;
                 }
-                if (col > colAmount || col < 0 || row > rowAmount || row < 0)
+                if (col >= colAmount || col < 0 || row >= rowAmount || row < 0)
                     throw new Exception("Position out of bound");
                 return new Pair<>(col, row);
             }

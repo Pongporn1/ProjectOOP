@@ -68,31 +68,28 @@ public abstract class Leader {
         if (turn == 0) {
             while (ownedMinions.isEmpty()) {
                 Scanner sc = new Scanner(System.in);
-                System.out.println("where you want to spawn minnion");
+                System.out.println("where you want to spawn minion");
                 long I1 = sc.nextLong();
                 long I2 = sc.nextLong();
+                System.out.println("I1: " + I1);
+                System.out.println("I2: " + I2);
                 buyMinionAndPlaceAt(Pair.of(I1, I2), "Proto");
             }
             return;
         }
-
         receiveTurnBudgetAndInterest();
+        buyHexState();
+        buyMinionState();
+    }
 
-        while (true) {
-            Scanner sc = new Scanner(System.in);
-            System.out.println("wanna get hex y/n ");
-            String input = sc.nextLine();
-            if (input.equals("y")) {
-                System.out.println("where");
-                long I1 = sc.nextLong();
-                long I2 = sc.nextLong();
-                Pair<Long, Long> position = new Pair<>(I1, I2);
-                if (buyHex(position)) break;
-            } else if (input.equals("n")) {
-                break;
-            }
-        }
+    public void turnEnd() throws Exception {
+        executeMinionsStrategy();
+        game.printOwnerBoard();
+        System.out.println("---------------------------");
+        game.printMinionBoard();
+    }
 
+    public void buyMinionState() throws Exception {
         while (true) {
             Scanner sc = new Scanner(System.in);
             System.out.println("wanna buy minnion y/n");
@@ -111,21 +108,27 @@ public abstract class Leader {
         }
     }
 
-    public void turnEnd() throws Exception {
-        executeMinionsStrategy();
-        game.printOwnerBoard();
-        System.out.println("---------------------------");
-        game.printMinionBoard();
-    }
-
-    public void buyMinionStage() {
-
+    public void buyHexState() throws Exception {
+        while (true) {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("wanna get hex y/n ");
+            String input = sc.nextLine();
+            if (input.equals("y")) {
+                System.out.println("where");
+                long I1 = sc.nextLong();
+                long I2 = sc.nextLong();
+                Pair<Long, Long> position = new Pair<>(I1, I2);
+                if (buyHex(position)) break;
+            } else if (input.equals("n")) {
+                break;
+            }
+        }
     }
 
     public boolean buyHex(Pair<Long, Long> hexPosition) throws Exception { //tempo Pair<Integer, Integer> hexPosition
         if (budget < game.getSettingValue("hex_purchase_cost")
                 || game.hasMinionAt(hexPosition.getFirst(), hexPosition.getSecond())
-                || game.getHexAt(hexPosition).hasOwner())
+                    || game.getHexAt(hexPosition).hasOwner())
             return false;
 
         budget -= game.getSettingValue("hex_purchase_cost");

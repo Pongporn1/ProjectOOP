@@ -7,7 +7,34 @@ import java.util.Map;
 public class Main {
     public static void main(String[] args) {
         String s = """
-                move down
+                oppoLoc = opponent
+                if (oppoLoc) then
+                {
+                    if (oppoLoc / 10 - 1) then {
+                        if(oppoLoc % 10 - 5) then move upleft
+                        else if(oppoLoc % 10 - 4) then move downleft
+                        else if(oppoLoc % 10 - 3) then move down
+                        else if(oppoLoc % 10 - 2) then move downright
+                        else if(oppoLoc % 10 - 1) then move upright
+                        else move up
+                    } else {
+                        if(oppoLoc % 10 - 5) then shoot upleft 1
+                        else if(oppoLoc % 10 - 4) then shoot downleft 1
+                        else if(oppoLoc % 10 - 3) then shoot down 1
+                        else if(oppoLoc % 10 - 2) then shoot downright 1
+                        else if(oppoLoc % 10 - 1) then shoot upright 1
+                        else shoot up 1
+                    }
+                }
+                else {
+                    randir = random
+                    if(randir % 6 - 4) then move upleft
+                    else if(randir % 6 - 3) then move downleft
+                    else if(randir % 6 - 2) then move down
+                    else if(randir % 6 - 1) then move downright
+                    else if(randir % 6) then move upright
+                    else move up
+                }
                 """;
         try {
             StrategyParser parse = new StrategyParser(s);
