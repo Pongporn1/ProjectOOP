@@ -20,10 +20,10 @@ public enum Direction {
         return switch (direction) {
             case "up" -> (colum) -> new Pair<>(-1L, 0L);
             case "down" -> (colum) -> new Pair<>(1L, 0L);
-            case "upleft" -> (colum) -> new Pair<>(-1L + colum % 2, -1L);
-            case "upright" -> (colum) -> new Pair<>(-1L + colum % 2, 1L);
-            case "downleft" -> (colum) -> new Pair<>(colum % 2, -1L) ;
-            case "downright" -> (colum) ->  new Pair<>(colum % 2, 1L) ;
+            case "upleft" -> (colum) -> new Pair<>(-1L + (colum + 1) % 2, -1L);
+            case "upright" -> (colum) -> new Pair<>(-1L + (colum + 1) % 2, 1L);
+            case "downleft" -> (colum) -> new Pair<>((colum + 1) % 2, -1L) ;
+            case "downright" -> (colum) ->  new Pair<>((colum + 1) % 2, 1L) ;
             default -> throw new Exception("from Direction.tranformDirection, unknown direction: " + direction);
         };
     }
