@@ -13,13 +13,11 @@ public abstract class Game {
     protected Leader leader1, leader2;
     protected Hex[][] board;
     protected Map<String, Long> settings = new HashMap<String, Long>();
-    protected Minion[] minionsKind;
+    //protected Minion[] minionsKind;
     protected Map<String, Strategy> minionStrategies = new HashMap<>();
     protected int turn;
     protected int colAmount;
     protected int rowAmount;
-    protected Leader currentTurnOfLeader;
-
 
     public Game(Map<String, Strategy> minionStrategies) {
         this(minionStrategies, 8, 8);
@@ -36,10 +34,6 @@ public abstract class Game {
                 board[i][j] = new Hex();
             }
         }
-    }
-
-    public void beginGame() {
-        currentTurnOfLeader = leader1;
     }
 
     public void loadConfiguration() {
@@ -59,33 +53,34 @@ public abstract class Game {
         //endregion
     }
 
-    public void GameSet() {
-        for (int i = 0; i < 3; i++) {
-            board[0][i].setOwner(leader1);
-            leader1.ownHexes.add(Pair.of(0L, (long) i));
-        }
-        for (int i = 0; i < 2; i++) {
-            board[1][i].setOwner(leader1);
-            leader1.ownHexes.add(Pair.of(1L, (long) i));
-        }
-        //Pair<Integer,Integer> AAA = new Pair<>(0,1);
-        //Pair<Integer,Integer> AAAA = new Pair<>(1,1);
-        //board[0][1].setOwner(leader1);//leader1.setOwnHexes(AAA);
-        //System.out.println("test "+leader1.ownHexes.contains(AAA));
-        ///board[1][1].setOwner(leader1);//leader1.setOwnHexes(AAAA);
+//    public void GameSet() {
+//        for (int i = 0; i < 3; i++) {
+//            board[0][i].setOwner(leader1);
+//            leader1.ownHexes.add(Pair.of(0L, (long) i));
+//        }
+//        for (int i = 0; i < 2; i++) {
+//            board[1][i].setOwner(leader1);
+//            leader1.ownHexes.add(Pair.of(1L, (long) i));
+//        }
+//        //Pair<Integer,Integer> AAA = new Pair<>(0,1);
+//        //Pair<Integer,Integer> AAAA = new Pair<>(1,1);
+//        //board[0][1].setOwner(leader1);//leader1.setOwnHexes(AAA);
+//        //System.out.println("test "+leader1.ownHexes.contains(AAA));
+//        ///board[1][1].setOwner(leader1);//leader1.setOwnHexes(AAAA);
+//
+//        for (int i = 6; i < 8; i++) {
+//            board[6][i].setOwner(leader2);
+//            leader2.ownHexes.add(Pair.of(6L, (long) i));
+//        }
+//        for (int i = 5; i < 8; i++) {
+//            board[7][i].setOwner(leader2);
+//            leader2.ownHexes.add(Pair.of(7L, (long) i));
+//        }
+//    }
 
-        for (int i = 6; i < 8; i++) {
-            board[6][i].setOwner(leader2);
-            leader2.ownHexes.add(Pair.of(6L, (long) i));
-        }
-        for (int i = 5; i < 8; i++) {
-            board[7][i].setOwner(leader2);
-            leader2.ownHexes.add(Pair.of(7L, (long) i));
-        }
-    }
+    public void gameLoop() throws Exception {
 
-    public void gameloop() throws Exception {
-        for (int i = 1; i <= 5/*Constants.max_turn*/; i++) { //use 2 for test
+        for (int i = 0; i < getSettingValue("max_turns"); i++) {
             System.out.println("player1 turn:" + turn);
             leader1.turnBegin(turn);
             leader1.turnEnd();
@@ -93,16 +88,17 @@ public abstract class Game {
             leader2.turnBegin(turn);
             leader2.turnEnd();
             turn++;
-
+            System.out.println("Test Nearby:" + getNearby(leader1.getOwnedMinions().get(0), Direction.DOWN_RIGHT));
+            System.out.println("Leader 1 Minion List");
+            for(Minion m : leader1.ownedMinions){
+                System.out.println(m.minionDetail());
+            }
+            System.out.println("Leader 2 Minion List");
+            for(Minion m : leader2.ownedMinions){
+                System.out.println(m.minionDetail());
+            }
         }
     }
-
-    public void setMiniononhex(Minion minion, Leader leader, int row, int col) {
-        if (board[row][col].getLeader() == leader && !board[row][col].hasminion) {
-            board[row][col].setMinionOnHex(minion);
-        }
-    }
-
 
     public Leader getFirstLeader() {
         return leader1;
@@ -133,7 +129,7 @@ public abstract class Game {
         return board[(int) row][(int) col].setOwner(buyer);
     }
 
-    public boolean isHexOccupied(long row, long col) throws Exception {
+    public boolean isHexOccupied(long row, long col) {
         return getHexAt((int) row, (int) col).hasOwner();
     }
 
@@ -141,7 +137,7 @@ public abstract class Game {
         return moveMinionByOffset(minion, offset.getFirst().intValue(), offset.getSecond().intValue());
     }
 
-    public int getAlly(Minion minion) throws Exception {
+    public int getAlly(Minion minion)  {
         Pair<Long, Long> currentPosition = minion.getPosition();
         for (int distance = 1; distance < Math.max(colAmount, rowAmount); distance++) {
             for (int direction = 1; direction <= 6; direction++) {
@@ -160,7 +156,7 @@ public abstract class Game {
         return 0;
     }
 
-    public int getOpponent(Minion minion) throws Exception {
+    public int getOpponent(Minion minion) {
         Pair<Long, Long> currentPosition = minion.getPosition();
         for (int distance = 1; distance < Math.max(colAmount, rowAmount); distance++) {
             for (int direction = 1; direction <= 6; direction++) {
@@ -188,16 +184,17 @@ public abstract class Game {
                 continue;
             }
             Hex checkedHex = getHexAt(checkedPosition);
-            if (checkedHex.hasMinionOnGrid() && checkedHex.getMinionOnGrid().getOwner().equals(minion.getOwner())) {
+            if (checkedHex.hasMinionOnGrid()) {
                 Minion m = checkedHex.getMinionOnGrid();
-                return 100 * Utility.Number.count_digit(m.getHealth()) + 10 * Number.count_digit(m.getDefense()) + distance;
+                int sign = m.getOwner().equals(minion.getOwner()) ? 1 : -1;
+                return sign * (100 * Utility.Number.count_digit(m.getHealth()) + 10 * Number.count_digit(m.getDefense()) + distance);
             }
         }
         return 0;
     }
 
     // Should Refactor and Optimized, Maybe we can do O(1) with utility function in Utility/Number class
-    private Pair<Long, Long> getPosition(Pair<Long, Long> pos, Direction direction, int distance) throws Exception {
+    public Pair<Long, Long> getPosition(Pair<Long, Long> pos, Direction direction, int distance) throws Exception {
         switch (direction) {
             case Direction.UP -> {
                 long col = pos.getFirst() - distance;
@@ -259,6 +256,18 @@ public abstract class Game {
             }
         }
         throw new Exception("Unknown direction");
+    }
+
+    public boolean attackTo(Minion attacker, Direction direction, long damage) {
+        Pair<Long, Long> attackerPosition = attacker.getPosition();
+        try {
+            Pair<Long, Long> positionToAttack = getPosition(attackerPosition, direction, 1);
+            Hex hexToAttack = getHexAt(positionToAttack);
+            return hexToAttack.getAttack(damage);
+        }catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
     }
 
     public boolean hasMinionAt(long row, long col) {

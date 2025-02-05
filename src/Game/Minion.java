@@ -9,7 +9,7 @@ public class Minion {
 
     private String minionType;
     private Leader owner;
-    private int health, defense;
+    private long health, defense;
     private Map<String, Long> variables = new HashMap<>();
     private Pair<Long, Long> position;
     private Strategy strategy;
@@ -21,6 +21,7 @@ public class Minion {
         this.strategy = strategy;
         this.owner = owner;
         this.position = position;
+        this.health = game.getSettingValue("init_hp");
     }
 
 //    public Minion(String minionType, Leader owner) {
@@ -52,16 +53,21 @@ public class Minion {
         return game.getNearby(this, direction);
     }
 
-    public int getHealth() {
+    public long getHealth() {
         return health;
     }
 
-    public int getDefense() {
+    public long getDefense() {
         return defense;
     }
 
-    public boolean attack(Direction direction, long cost) throws Exception {
-        return false;
+    public boolean attack(Direction direction, long damage) throws Exception {
+        if (!owner.reduceBudget(damage + 1)) return false;
+        return game.attackTo(this, direction, damage);
+    }
+
+    public void getDamage(long damage){
+        health = Math.max(0, health - Math.max(1, damage - defense));
     }
 
     public boolean move(Direction direction) throws Exception {
@@ -89,7 +95,11 @@ public class Minion {
 
     @Override
     public String toString() {
-        return owner.topordown+":"+minionType;
+        return owner.leaderSymbol +":"+minionType;
+    }
+
+    public String minionDetail(){
+        return minionType + "\nHP: " + health + "\nDefense: " + defense;
     }
 
     public long getVariable(String variable) {

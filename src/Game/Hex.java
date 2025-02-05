@@ -11,6 +11,8 @@ public class Hex {
         return true;
     }
 
+
+
     /*public boolean Hasminion() {
 
         return hasminion;
@@ -26,10 +28,14 @@ public class Hex {
     }
 
     public boolean setMinionOnHex(Minion minion) {
-        //if(leaderOwner != null) {
+        if(minionOnGrid != null) return false;
         minionOnGrid = minion;
-        //hasminion = true;
-        //}
+        return true;
+    }
+
+    public boolean getAttack(long damage){
+        if(minionOnGrid == null) return false;
+        minionOnGrid.getDamage(damage);
         return true;
     }
 
@@ -52,7 +58,7 @@ public class Hex {
         if (hasminion == false) {
             return "O";
         } else {
-            if (minionOnGrid.getOwner().topordown == "T") {
+            if (minionOnGrid.getOwner().leaderSymbol == "T") {
                 return "X";
             } else {
                 return "Y";
@@ -63,7 +69,7 @@ public class Hex {
 
     public String ownerString() {
         if (!hasOwner()) return "_";
-        return leaderOwner.topordown;
+        return leaderOwner.leaderSymbol;
     }
 
     @Override
@@ -71,9 +77,9 @@ public class Hex {
         if (leaderOwner == null) {
             return "O";
         } else {
-            if (leaderOwner.topordown == "T") {
+            if (leaderOwner.leaderSymbol == "T") {
                 return "a";
-            } else if (leaderOwner.topordown == "D") {
+            } else if (leaderOwner.leaderSymbol == "D") {
                 return "b";
             } else {
                 return "e";

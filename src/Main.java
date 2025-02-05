@@ -27,13 +27,7 @@ public class Main {
                     }
                 }
                 else {
-                    randir = random
-                    if(randir % 6 - 4) then move upleft
-                    else if(randir % 6 - 3) then move downleft
-                    else if(randir % 6 - 2) then move down
-                    else if(randir % 6 - 1) then move downright
-                    else if(randir % 6) then move upright
-                    else move up
+                    move down
                 }
                 """;
         try {
@@ -45,7 +39,8 @@ public class Main {
             Map<String, Strategy> validMinions = new HashMap<>();
             validMinions.put("Proto", strategy);
             Game game = new DuelMode(validMinions);
-            game.gameloop();
+            game.gameLoop();
+
 
         } catch (Exception e) {
             System.out.println(e);

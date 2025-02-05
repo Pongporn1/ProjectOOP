@@ -3,8 +3,8 @@ import Game.*;
 
 public class AttackCommand extends Statement{
 
-    private Direction direction;
-    private Expression expression;
+    private final Direction direction;
+    private final Expression expression;
 
     public AttackCommand(Direction direction, Expression expression) {
         this.direction = direction;
@@ -13,7 +13,8 @@ public class AttackCommand extends Statement{
 
     @Override
     public boolean execute(Minion target) throws Exception {
-        long cost = expression.evaluate(target) + 1;
+        target.getOwner().reduceBudget(1);
+        long cost = expression.evaluate(target);
         if(target.getOwner().getBudget() < cost)
             throw new Exception("Have not enough budget to shoot at: " + cost);
         target.attack(direction, cost);
