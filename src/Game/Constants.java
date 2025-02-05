@@ -8,4 +8,6 @@ public class Constants {
     public static  double turn_income = 400;
     public static  int interest = 5;
     public static  double start_budget = 1000;
+    public static  int HP = 100;
+    public static  int DEF = 10;
 }

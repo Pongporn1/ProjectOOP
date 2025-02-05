@@ -1,12 +1,16 @@
 package Game;
 
 import MinionStrategy.Strategy;
+import MinionStrategy.StrategyParser;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class DuelMode extends Game{
 
     public DuelMode(Map<String, Strategy> minionsStrategy){
+
+
         super(minionsStrategy);
         leader1 = new PlayerLeader(this, "Player1", "1");
         for(int i = 0; i < 2; i++){
@@ -23,6 +27,8 @@ public class DuelMode extends Game{
                 leader2.addOwnHex(Pair.of((long)i, (long)j));
             }
         }
+        leader1.setBuyableHexes();
+        leader2.setBuyableHexes();
         printOwnerBoard();
     }
 }

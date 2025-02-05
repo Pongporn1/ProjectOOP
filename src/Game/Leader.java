@@ -9,6 +9,7 @@ public abstract class Leader {
     protected List<Minion> ownedMinions = new ArrayList<Minion>();
     protected double budget;
     protected Map<String, Long> globalVariables = new HashMap<>();
+    private List<Pair<Long, Long>> buyableHexes = new ArrayList<>();
     protected List<Pair<Long, Long>> ownHexes = new ArrayList<>();
     protected Game game;
     protected long turnCount;
@@ -31,40 +32,43 @@ public abstract class Leader {
         return game.getSettingValue("max_spawns") - ownedMinions.size();
     }
 
-    public void setBuyableHexes() {
 
-//        for(Pair<Long, Long> p : ownHexes){
-//
-//            int[][] metrix = new int[8][2] ;
-//
-//             metrix[0][0] = p.getFirst()+1;         metrix[0][1] = p.getSecond();
-//             metrix[1][0] = p.getFirst()+1;         metrix[1][1] = p.getSecond()+1;
-//             metrix[2][0] = p.getFirst();         metrix[2][1] = p.getSecond()+1;
-//             metrix[3][0] = p.getFirst()-1;         metrix[3][1] = p.getSecond()+1;
-//             metrix[4][0] = p.getFirst()-1;         metrix[4][1] = p.getSecond();
-//             metrix[5][0] = p.getFirst()-1;         metrix[5][1] = p.getSecond()-1;
-//             metrix[6][0] = p.getFirst();         metrix[6][1] = p.getSecond()-1;
-//             metrix[7][0] = p.getFirst()+1;         metrix[7][1] = p.getSecond()-1;
-//             for(int i =0;i<8;i++) {
-//              if(0 <= metrix[i][0] && metrix[i][0] < 8 &&0 <= metrix[i][1] && metrix[i][1] < 8) {
-//                  Pair<Integer,Integer> X = new Pair<>(metrix[i][0], metrix[i][1]);
-//
-//                  if(!ownHexes.contains(X) && !buyableHexes.contains(X)) { //need fix equal
-//                      buyableHexes.add(Pair.of(metrix[i][0], metrix[i][1]));
-//                      System.out.println(i);
-//                      System.out.println("add " + metrix[i][0] + " " + metrix[i][1]);
-//
-//                  }
-//              }
-//             }
-//        }
+
+    public void setBuyableHexes(){
+
+        for(Pair<Long, Long> p : ownHexes){
+
+            Long[][] metrix = new Long[8][2] ;
+
+            metrix[0][0] = p.getFirst()+1;         metrix[0][1] = p.getSecond();
+            metrix[1][0] = p.getFirst()+1;         metrix[1][1] = p.getSecond()+1;
+            metrix[2][0] = p.getFirst();         metrix[2][1] = p.getSecond()+1;
+            metrix[3][0] = p.getFirst()-1;         metrix[3][1] = p.getSecond()+1;
+            metrix[4][0] = p.getFirst()-1;         metrix[4][1] = p.getSecond();
+            metrix[5][0] = p.getFirst()-1;         metrix[5][1] = p.getSecond()-1;
+            metrix[6][0] = p.getFirst();         metrix[6][1] = p.getSecond()-1;
+            metrix[7][0] = p.getFirst()+1;         metrix[7][1] = p.getSecond()-1;
+            for(int i =0;i<8;i++) {
+                if(0 <= metrix[i][0] && metrix[i][0] < 8 &&0 <= metrix[i][1] && metrix[i][1] < 8) {
+                    Pair<Long,Long> X = new Pair<>(metrix[i][0], metrix[i][1]);
+
+                    if(!ownHexes.contains(X) && !buyableHexes.contains(X)) { //need fix equal
+                        buyableHexes.add(Pair.of(metrix[i][0], metrix[i][1]));
+
+
+                    }
+                }
+            }
+        }
     }
+
 
     public String getName() {
         return leaderName;
     }
 
     public void turnBegin(int turn) throws Exception {
+        System.out.println("budget : " + getBudget());
         if (turn == 0) {
             while (ownedMinions.isEmpty()) {
                 Scanner sc = new Scanner(System.in);
@@ -112,7 +116,7 @@ public abstract class Leader {
     }
 
     public void turnEnd() throws Exception {
-        executeMinionsStrategy();
+        executeMinionsStrategy();////
         game.printOwnerBoard();
         System.out.println("---------------------------");
         game.printMinionBoard();
@@ -123,22 +127,26 @@ public abstract class Leader {
     }
 
     public boolean buyHex(Pair<Long, Long> hexPosition) throws Exception { //tempo Pair<Integer, Integer> hexPosition
-        if (budget < game.getSettingValue("hex_purchase_cost")
+        if (budget < game.getSettingValue("hex_purchase_cost"  )
                 || game.hasMinionAt(hexPosition.getFirst(), hexPosition.getSecond())
                 || game.getHexAt(hexPosition).hasOwner())
-            return false;
 
+            return false;
+        if(buyableHexes.contains(Pair.of(hexPosition.getFirst(), hexPosition.getSecond()))){
         budget -= game.getSettingValue("hex_purchase_cost");
         game.buyHexAt(this, hexPosition.getFirst(), hexPosition.getSecond());
         ownHexes.add(Pair.of(hexPosition.getFirst(), hexPosition.getSecond()));
-        return true;
+        buyableHexes.clear();
+        setBuyableHexes();
+        return true;}else{return false;}
+
 
 //        if(budget>=Constants.hex_price){
 //            budget -= Constants.hex_price;
 //            //ownHexes.add(Pair.of(hexPosition.getFirst(), hexPosition.getSecond()));
 //            return true;
 //        }
-//        return false;
+
     }
 
     public void addOwnHex(Pair<Long, Long> ownHexes) {

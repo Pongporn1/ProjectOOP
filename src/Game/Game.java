@@ -82,16 +82,25 @@ public abstract class Game {
             board[7][i].setOwner(leader2);
             leader2.ownHexes.add(Pair.of(7L, (long) i));
         }
+        leader1.setBuyableHexes();
+        leader2.setBuyableHexes();
     }
 
     public void gameloop() throws Exception {
-        for (int i = 1; i <= 2/*Constants.max_turn*/; i++) { //use 2 for test
+        for (int i = 1; i <= 3/*Constants.max_turn*/; i++) { //use for test only
             System.out.println("player1 turn:" + turn);
             leader1.turnBegin(turn);
             leader1.turnEnd();
             System.out.println("player2 turn:" + turn);
             leader2.turnBegin(turn);
             leader2.turnEnd();
+            if(leader1.ownedMinions.size() == 0){
+                System.out.println("we got winner ");
+                break;
+            } else if (leader2.ownedMinions.size() == 0) {
+                System.out.println("we got winner ");
+                break;
+            }
             turn++;
 
         }
