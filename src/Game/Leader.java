@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public abstract class Leader {
     protected String leaderName;
-    public String topordown;
+    public String leaderSymbol;
     protected List<Minion> ownedMinions = new ArrayList<Minion>();
     protected double budget;
     protected Map<String, Long> globalVariables = new HashMap<>();
@@ -14,53 +14,60 @@ public abstract class Leader {
     protected long turnCount;
     protected boolean firstBuyMinion = true;
 
-    public Leader(Game game, String leaderName, String topordown) {
+    public Leader(Game game, String leaderName, String leaderSymbol) {
         this.game = game;
         this.budget = game.getSettingValue("init_budget");
         this.leaderName = leaderName;
-        this.topordown = topordown;
+        this.leaderSymbol = leaderSymbol;
     }
 
     public void executeMinionsStrategy() throws Exception {
         for (Minion m : ownedMinions) {
+            if(budget <= 0) return;
             m.execute();
         }
+    }
+
+    public boolean reduceBudget(long amount) {
+        if (budget < amount) return false;
+        budget -= amount;
+        return true;
     }
 
     public long getSpawnRemain() {
         return game.getSettingValue("max_spawns") - ownedMinions.size();
     }
 
-    public void setBuyableHexes() {
+//    public void setBuyableHexes() {
+//
+////        for(Pair<Long, Long> p : ownHexes){
+////
+////            int[][] metrix = new int[8][2] ;
+////
+////             metrix[0][0] = p.getFirst()+1;         metrix[0][1] = p.getSecond();
+////             metrix[1][0] = p.getFirst()+1;         metrix[1][1] = p.getSecond()+1;
+////             metrix[2][0] = p.getFirst();         metrix[2][1] = p.getSecond()+1;
+////             metrix[3][0] = p.getFirst()-1;         metrix[3][1] = p.getSecond()+1;
+////             metrix[4][0] = p.getFirst()-1;         metrix[4][1] = p.getSecond();
+////             metrix[5][0] = p.getFirst()-1;         metrix[5][1] = p.getSecond()-1;
+////             metrix[6][0] = p.getFirst();         metrix[6][1] = p.getSecond()-1;
+////             metrix[7][0] = p.getFirst()+1;         metrix[7][1] = p.getSecond()-1;
+////             for(int i =0;i<8;i++) {
+////              if(0 <= metrix[i][0] && metrix[i][0] < 8 &&0 <= metrix[i][1] && metrix[i][1] < 8) {
+////                  Pair<Integer,Integer> X = new Pair<>(metrix[i][0], metrix[i][1]);
+////
+////                  if(!ownHexes.contains(X) && !buyableHexes.contains(X)) { //need fix equal
+////                      buyableHexes.add(Pair.of(metrix[i][0], metrix[i][1]));
+////                      System.out.println(i);
+////                      System.out.println("add " + metrix[i][0] + " " + metrix[i][1]);
+////
+////                  }
+////              }
+////             }
+////        }
+//    }
 
-//        for(Pair<Long, Long> p : ownHexes){
-//
-//            int[][] metrix = new int[8][2] ;
-//
-//             metrix[0][0] = p.getFirst()+1;         metrix[0][1] = p.getSecond();
-//             metrix[1][0] = p.getFirst()+1;         metrix[1][1] = p.getSecond()+1;
-//             metrix[2][0] = p.getFirst();         metrix[2][1] = p.getSecond()+1;
-//             metrix[3][0] = p.getFirst()-1;         metrix[3][1] = p.getSecond()+1;
-//             metrix[4][0] = p.getFirst()-1;         metrix[4][1] = p.getSecond();
-//             metrix[5][0] = p.getFirst()-1;         metrix[5][1] = p.getSecond()-1;
-//             metrix[6][0] = p.getFirst();         metrix[6][1] = p.getSecond()-1;
-//             metrix[7][0] = p.getFirst()+1;         metrix[7][1] = p.getSecond()-1;
-//             for(int i =0;i<8;i++) {
-//              if(0 <= metrix[i][0] && metrix[i][0] < 8 &&0 <= metrix[i][1] && metrix[i][1] < 8) {
-//                  Pair<Integer,Integer> X = new Pair<>(metrix[i][0], metrix[i][1]);
-//
-//                  if(!ownHexes.contains(X) && !buyableHexes.contains(X)) { //need fix equal
-//                      buyableHexes.add(Pair.of(metrix[i][0], metrix[i][1]));
-//                      System.out.println(i);
-//                      System.out.println("add " + metrix[i][0] + " " + metrix[i][1]);
-//
-//                  }
-//              }
-//             }
-//        }
-    }
-
-    public String getName() {
+    public String getLeaderName() {
         return leaderName;
     }
 
@@ -104,7 +111,6 @@ public abstract class Leader {
             } else if (input.equals("n")) {
                 break;
             }
-
         }
     }
 
@@ -135,13 +141,6 @@ public abstract class Leader {
         game.buyHexAt(this, hexPosition.getFirst(), hexPosition.getSecond());
         ownHexes.add(Pair.of(hexPosition.getFirst(), hexPosition.getSecond()));
         return true;
-
-//        if(budget>=Constants.hex_price){
-//            budget -= Constants.hex_price;
-//            //ownHexes.add(Pair.of(hexPosition.getFirst(), hexPosition.getSecond()));
-//            return true;
-//        }
-//        return false;
     }
 
     public void addOwnHex(Pair<Long, Long> ownHexes) {
@@ -171,7 +170,6 @@ public abstract class Leader {
         Minion m = game.placeMinion(hexPosition.getFirst(), hexPosition.getSecond(), minionType, this);
         ownedMinions.add(m);
         return true;
-
 //        if(budget>=Constants.minion_price && ownHexes.contains(Pair.of(hexPosition.getFirst(), hexPosition.getSecond()))){
 //            budget -= Constants.minion_price;
 //            Minion M01 = new Minion(hexPosition.getFirst(), hexPosition.getSecond() , this);
@@ -202,14 +200,15 @@ public abstract class Leader {
         return (long) budget;
     }
 
-    public double BudgetplusCal() {
-        budget += getInterest();
-        budget += Constants.turn_income;
-        return (int) budget;
-    }
+//    public double BudgetplusCal() {
+//        budget += getInterest();
+//        budget += Constants.turn_income;
+//        return (int) budget;
+//    }
 
     private void receiveTurnBudgetAndInterest() {
-        budget = Math.max(game.getSettingValue("max_budget"), budget + calculateInterest());
+        budget = Math.min(game.getSettingValue("max_budget"), budget + calculateInterest());
+        budget = Math.max(game.getSettingValue("max_budget"), budget + game.getSettingValue("turn_budget"));
     }
 
     public List<Minion> getOwnedMinions() {
