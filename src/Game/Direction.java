@@ -24,7 +24,7 @@ public enum Direction {
             case "upright" -> (colum) -> new Pair<>(-1L + (colum + 1) % 2, 1L);
             case "downleft" -> (colum) -> new Pair<>((colum + 1) % 2, -1L) ;
             case "downright" -> (colum) ->  new Pair<>((colum + 1) % 2, 1L) ;
-            default -> throw new Exception("from Direction.tranformDirection, unknown direction: " + direction);
+            default -> throw new Exception("from Direction.transformDirection, unknown direction: " + direction);
         };
     }
 }
