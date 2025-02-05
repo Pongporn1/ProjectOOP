@@ -10,7 +10,7 @@ public class Main {
                 move up
                 """;
         try {
-            StrategyParser parse = new StrategyParser(s);/////
+            StrategyParser parse = new StrategyParser(s);//////
             Strategy strategy = parse.parse();///////
             StringBuilder sb = new StringBuilder();
             strategy.prettyPrint(sb);
