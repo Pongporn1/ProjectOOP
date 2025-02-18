@@ -99,6 +99,13 @@ public abstract class Game {
         if(res == 0) res = binaryPredicate((x) -> x.getFirst() > x.getSecond(), leader1MinionsHealth, leader2MinionsHealth);
         if(res == 0) res = binaryPredicate((x) -> x.getFirst() > x.getSecond(), leader1.getBudget(), leader2.getBudget());
 
+        System.out.println("Result");
+        System.out.println("Minion Remain");
+        System.out.println(leader1Minions.size() + " : " + leader2Minions.size());
+        System.out.println("Minion Health Remain");
+        System.out.println(leader1MinionsHealth + " : " + leader2MinionsHealth);
+        System.out.println("Budget Remain");
+        System.out.println(leader1.getBudget() + " : " + leader2.getBudget());
         if(res == 0) System.out.println("Tie");
         else if(res > 0) System.out.println("Player 2 Wins");
         else System.out.println("Player 1 Wins");
@@ -108,7 +115,7 @@ public abstract class Game {
         System.out.println("Turn #" + turn + " of " + leader.getLeaderName());
         System.out.println("Budget: " + leader.getBudget());
         giveInterest(leader);
-        //leader.turnBegin(turn);
+        leader.turnBegin(turn);
         leader.turnEnd();
         printShiftMinionBoard();
     }
@@ -165,7 +172,7 @@ public abstract class Game {
             throw new Exception("Can't move outside board, destination position is " + destinationPosition);
         boolean isMoveable = !hasMinionAt(destinationPosition.getFirst(), destinationPosition.getSecond());
 
-        System.out.println("Move: " + dRow + ", " + dCol);
+        //System.out.println("Move: " + dRow + ", " + dCol);
         if (isMoveable) {
             getHexAt(currentPosition).removeMinionOnHex();
             getHexAt(destinationPosition).setMinionOnHex(minion);
@@ -251,62 +258,62 @@ public abstract class Game {
     public Pair<Long, Long> getRelativePosition(Pair<Long, Long> pos, Direction direction, int distance) throws Exception {
         switch (direction) {
             case Direction.UP -> {
-                long col = pos.getFirst() - distance;
-                long row = pos.getSecond();
+                long col = pos.getSecond();
+                long row = pos.getFirst() - distance;
                 if (col >= colAmount || col < 0 || row >= rowAmount || row < 0)
                     throw new Exception("Position out of bound");
-                return new Pair<>(col, row);
+                return new Pair<>(row, col);
             }
             case Direction.DOWN -> {
-                long col = pos.getFirst() + distance;
-                long row = pos.getSecond();
+                long col = pos.getSecond() ;
+                long row = pos.getFirst() + distance;
                 if (col >= colAmount || col < 0 || row >= rowAmount || row < 0)
                     throw new Exception("Position out of bound");
-                return new Pair<>(col, row);
+                return new Pair<>(row, col);
             }
             case Direction.DOWN_LEFT -> {
                 long col = pos.getSecond();
                 long row = pos.getFirst();
                 for (distance--; distance >= 0; distance--) {
                     col--;
-                    if (col % 2 == 1) row++;
+                    if (col % 2 == 0) row++;
                 }
                 if (col >= colAmount || col < 0 || row >= rowAmount || row < 0)
                     throw new Exception("Position out of bound");
-                return new Pair<>(col, row);
+                return new Pair<>(row, col);
             }
             case Direction.DOWN_RIGHT -> {
                 long col = pos.getSecond();
                 long row = pos.getFirst();
                 for (distance--; distance >= 0; distance--) {
                     col++;
-                    if (col % 2 == 1) row++;
+                    if (col % 2 == 0) row++;
                 }
                 if (col >= colAmount || col < 0 || row >= rowAmount || row < 0)
                     throw new Exception("Position out of bound");
-                return new Pair<>(col, row);
+                return new Pair<>(row, col);
             }
             case Direction.UP_LEFT -> {
                 long col = pos.getSecond();
                 long row = pos.getFirst();
                 for (distance--; distance >= 0; distance--) {
                     col--;
-                    if (col % 2 == 1) row--;
+                    if (col % 2 == 0) row--;
                 }
                 if (col >= colAmount || col < 0 || row >= rowAmount || row < 0)
                     throw new Exception("Position out of bound");
-                return new Pair<>(col, row);
+                return new Pair<>(row, col);
             }
             case Direction.UP_RIGHT -> {
                 long col = pos.getSecond();
                 long row = pos.getFirst();
                 for (distance--; distance >= 0; distance--) {
                     col++;
-                    if (col % 2 == 1) row--;
+                    if (col % 2 == 0) row--;
                 }
                 if (col >= colAmount || col < 0 || row >= rowAmount || row < 0)
                     throw new Exception("Position out of bound");
-                return new Pair<>(col, row);
+                return new Pair<>(row, col);
             }
         }
         throw new Exception("Unknown direction");
@@ -316,8 +323,10 @@ public abstract class Game {
         Pair<Long, Long> attackerPosition = attacker.getPosition();
         try {
             Pair<Long, Long> positionToAttack = getRelativePosition(attackerPosition, direction, 1);
+            System.out.println(direction);
+            System.out.println(attacker.getPosition() + " attack -> " + positionToAttack);
             Hex hexToAttack = getHexAt(positionToAttack);
-            return hexToAttack.getAttack(damage);
+            return hexToAttack.getAttack(attacker, damage);
         }catch (Exception e) {
             System.out.println(e);
             return false;
@@ -370,6 +379,10 @@ public abstract class Game {
         return minion;
     }
 
+    public Minion spawnMinion(Pair<Long, Long> pos, String minionType, Leader owner) {
+        return spawnMinion(pos.getFirst(), pos.getSecond(), minionType, owner);
+    }
+
     public void executeMinion(Minion minion) throws Exception {
         Strategy minionStrategy = minionKinds.get(minion.getMinionType()).getFirst();
         minionStrategy.execute(minion);
@@ -394,12 +407,28 @@ public abstract class Game {
     }
 
     public void printOwnerBoard() {
-        for (int i = 0; i < rowAmount; i++) {
-            for (int j = 0; j < colAmount; j++) {
-                System.out.print(board[i][j].ownerString());
+        for(int i = 0; i < rowAmount * 2; i++){
+            for(int j = 0; j < colAmount; j++){
+                if(j % 2 != i % 2){
+                    Leader m = board[i / 2][j].getLeader();
+
+                    if (m == null) {
+                        System.out.print("_____");
+                        System.out.print(" ".repeat(10));
+                    }
+                    else {
+                        int leaderNameLength = m.getLeaderName().length();
+                        System.out.print(m.getLeaderName());
+                        System.out.print(" ".repeat(15 - leaderNameLength));
+                    }
+                }else{
+                    System.out.print(" ".repeat(15 ));
+                }
             }
             System.out.println();
+            System.out.println();
         }
+        System.out.println();
     }
 
     public void printMinionBoard() {
@@ -414,6 +443,10 @@ public abstract class Game {
         System.out.println();
     }
 
+    // O(nlogn) + O(m)
+
+    // O(mlogn)
+
     public void printShiftMinionBoard(){
         for(int i = 0; i < rowAmount * 2; i++){
             for(int j = 0; j < colAmount; j++){
@@ -421,11 +454,13 @@ public abstract class Game {
                     Minion m = board[i / 2][j].getMinionOnHex();
 
                     if (m == null) {
+                        System.out.print(" ".repeat(7));
                         System.out.print("_");
-                        System.out.print(" ".repeat(14));
+                        System.out.print(" ".repeat(7));
                     }
                     else {
                         int minionTypeNameLength = m.getMinionType().length();
+
                         System.out.print(m);
                         System.out.print(" ".repeat(13 - minionTypeNameLength));
                     }
