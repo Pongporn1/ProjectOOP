@@ -10,6 +10,7 @@ public class Hex {
 
     public boolean setOwner(Leader leader) {
         leaderOwner = leader;
+        minionOnGrid = null;
         return true;
     }
 
@@ -28,9 +29,9 @@ public class Hex {
         return true;
     }
 
-    public boolean getAttack(long damage){
+    public boolean getAttack(Minion attacker, long damage){
         if(minionOnGrid == null) return false;
-        minionOnGrid.getDamage(damage);
+        minionOnGrid.getDamage(attacker, damage);
         return true;
     }
 
