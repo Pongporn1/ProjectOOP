@@ -66,30 +66,11 @@ public abstract class Leader {
 
     public void turnBegin(int turn) throws Exception {
         turnCount = turn;
-        Scanner sc = new Scanner(System.in);
         if (turn == 0) {
-            while (ownedMinions.isEmpty()) {
-                System.out.println("Available Minions");
-                for(String minion : game.availableMinions()){
-                    System.out.print(minion + ", ");
-                }
-                System.out.println();
-                System.out.print("What type of minion to spawn: ");
-                String kindToSpawn = sc.nextLine();
-                if(!game.availableMinions().contains(kindToSpawn)){
-                    System.out.println("Minion doesn't exist");
-                    continue;
-                }
-                System.out.println("where you want to spawn minion");
-                long I1 = sc.nextLong();
-                long I2 = sc.nextLong();
-                System.out.println("I1: " + I1);
-                System.out.println("I2: " + I2);
-                spawnMinionAt(Pair.of(I1, I2), kindToSpawn);
-            }
+            while (ownedMinions.isEmpty()) spawnMinionState();
             return;
         }
-        //receiveTurnBudgetAndInterest();
+
         buyHexState();
         spawnMinionState();
     }
@@ -213,7 +194,11 @@ public abstract class Leader {
         if ((budget < game.getSettingValue("spawn_cost") && !firstBuyMinion)
                 || game.hasMinionAt(hexPosition.getFirst(), hexPosition.getSecond())
                 || !game.getHexAt(hexPosition).getLeader().equals(this)
-        ) return false;
+                || ownedMinions.size() >= game.getSettingValue("max_spawns")
+        ) {
+            System.out.println("Unable to spawn minion");
+            return false;
+        }
 
         budget -= game.getSettingValue("spawn_cost");
         Minion m = game.spawnMinion(hexPosition.getFirst(), hexPosition.getSecond(), minionType, this);
