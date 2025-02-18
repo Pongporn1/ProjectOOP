@@ -6,4 +6,4 @@ turn_budget=90
 max_budget=23456
 interest_pct=5
 max_turns=69
-max_spawns=47
+max_spawns=5
