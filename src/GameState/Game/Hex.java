@@ -1,5 +1,6 @@
 package GameState.Game;
 
+import DataStructure.Pair;
 import GameState.Leader.Leader;
 
 public class Hex {
@@ -8,10 +9,18 @@ public class Hex {
     private Leader leaderOwner = null;
     public boolean hasminion = false;
 
+    public Hex(Pair<Integer, Integer> position) {
+        this.position = position;
+    }
+
     public boolean setOwner(Leader leader) {
         leaderOwner = leader;
         minionOnGrid = null;
         return true;
+    }
+
+    public Pair<Integer, Integer> getPosition() {
+        return position;
     }
 
     public Leader getLeader() {

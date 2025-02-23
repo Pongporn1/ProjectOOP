@@ -1,5 +1,6 @@
 package GameState.GameMode;
 
+import DataStructure.Pair;
 import GameState.Game.*;
 import AST.Strategy;
 import static Utility.FunUtil.*;
@@ -8,10 +9,7 @@ import GameState.Leader.Leader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 
 public abstract class Game {
@@ -36,7 +34,7 @@ public abstract class Game {
         board = new Hex[rowAmount][colAmount];
         for (int i = 0; i < rowAmount; i++) {
             for (int j = 0; j < colAmount; j++) {
-                board[i][j] = new Hex();
+                board[i][j] = new Hex(Pair.of(i, j));
             }
         }
     }
@@ -96,8 +94,11 @@ public abstract class Game {
         long leader2MinionsHealth = foldl((current) ->  current.getFirst() + current.getSecond().getHealth(), 0L, leader2Minions );
 
         int res = binaryPredicate((x) -> x.getFirst().size() > x.getSecond().size(), leader1Minions, leader2Minions);
+        System.out.println(res);
         if(res == 0) res = binaryPredicate((x) -> x.getFirst() > x.getSecond(), leader1MinionsHealth, leader2MinionsHealth);
+        System.out.println(res);
         if(res == 0) res = binaryPredicate((x) -> x.getFirst() > x.getSecond(), leader1.getBudget(), leader2.getBudget());
+        System.out.println(res);
 
         System.out.println("Result");
         System.out.println("Minion Remain");
@@ -107,8 +108,8 @@ public abstract class Game {
         System.out.println("Budget Remain");
         System.out.println(leader1.getBudget() + " : " + leader2.getBudget());
         if(res == 0) System.out.println("Tie");
-        else if(res > 0) System.out.println("Player 2 Wins");
-        else System.out.println("Player 1 Wins");
+        else if(res == 1) System.out.println("Player 1 Wins");
+        else if(res == 2) System.out.println("Player 2 Wins");
     }
 
     private void giveTurnToLeader(Leader leader, int turn) throws Exception {
@@ -276,7 +277,7 @@ public abstract class Game {
                 long row = pos.getFirst();
                 for (distance--; distance >= 0; distance--) {
                     col--;
-                    if (col % 2 == 0) row++;
+                    if (col % 2 == 1) row++;
                 }
                 if (col >= colAmount || col < 0 || row >= rowAmount || row < 0)
                     throw new Exception("Position out of bound");
@@ -287,7 +288,7 @@ public abstract class Game {
                 long row = pos.getFirst();
                 for (distance--; distance >= 0; distance--) {
                     col++;
-                    if (col % 2 == 0) row++;
+                    if (col % 2 == 1) row++;
                 }
                 if (col >= colAmount || col < 0 || row >= rowAmount || row < 0)
                     throw new Exception("Position out of bound");
@@ -379,6 +380,8 @@ public abstract class Game {
         return minion;
     }
 
+
+
     public Minion spawnMinion(Pair<Long, Long> pos, String minionType, Leader owner) {
         return spawnMinion(pos.getFirst(), pos.getSecond(), minionType, owner);
     }
@@ -404,6 +407,22 @@ public abstract class Game {
             }
             System.out.println();
         }// more mod
+    }
+
+    public Set<Hex> adjacentHex(Pair<Long, Long> pos) {
+        Set<Hex> adjacentHex = new HashSet<>();
+        //System.out.println("at:" + (pos.getFirst() + 1) + ", " + (pos.getSecond() + 1));
+        for(int dir = 0; dir < 6; dir++){
+            try {
+                Hex h = getHexAt(getRelativePosition(pos, Direction.directions[dir], 1));
+                //System.out.println("dir: " + Direction.directions[dir]);
+                //System.out.println(h.getPosition().getFirst() + 1 + " " + (h.getPosition().getSecond() + 1));
+                adjacentHex.add(h);
+            }catch (Exception e) {
+                continue;
+            }
+        }
+        return adjacentHex;
     }
 
     public void printOwnerBoard() {
@@ -443,26 +462,44 @@ public abstract class Game {
         System.out.println();
     }
 
-    // O(nlogn) + O(m)
+    public void printShiftPositionBoard(){
+        for(int i = 0; i < rowAmount * 2; i++){
+            for(int j = 0; j < colAmount; j++){
+                if(j % 2 != i % 2){
+                    Hex h = board[i / 2][j];
+                    String pos = h.getPosition().toString();
+                    int offset = pos.length();
+                    System.out.print(pos);
+                    System.out.print(" ".repeat(10 - offset));
 
-    // O(mlogn)
+                }else{
+                    System.out.print(" ".repeat(10 ));
+                }
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
 
     public void printShiftMinionBoard(){
         for(int i = 0; i < rowAmount * 2; i++){
             for(int j = 0; j < colAmount; j++){
                 if(j % 2 != i % 2){
-                    Minion m = board[i / 2][j].getMinionOnHex();
+                    Hex h = board[i / 2][j];
+                    Minion m = h.getMinionOnHex();
+                    Leader o = h.getLeader();
+                    String x = o == null ? "_" : o.leaderSymbol;
 
                     if (m == null) {
                         System.out.print(" ".repeat(7));
-                        System.out.print("_");
+                        System.out.print(x);
                         System.out.print(" ".repeat(7));
                     }
                     else {
                         int minionTypeNameLength = m.getMinionType().length();
-
+                        System.out.print(x+",");
                         System.out.print(m);
-                        System.out.print(" ".repeat(13 - minionTypeNameLength));
+                        System.out.print(" ".repeat(11 - minionTypeNameLength));
                     }
                 }else{
                     System.out.print(" ".repeat(15 ));

@@ -1,15 +1,18 @@
 package GameState.GameMode;
 
 import AST.Strategy;
-import GameState.Game.Pair;
+import DataStructure.Pair;
 import GameState.Leader.BotLeader;
-import GameState.Leader.PlayerLeader;
 
 import java.util.Map;
 
 public class AutoMode extends Game{
     public AutoMode(Map<String, Pair<Strategy, Long>> minionKinds){
-        super(minionKinds);
+        this(minionKinds, 8, 8);
+    }
+
+    public AutoMode(Map<String, Pair<Strategy, Long>> minionKinds, int rowAmount, int colAmount){
+        super(minionKinds, rowAmount, colAmount);
         leader1 = new BotLeader(this, "Player1", "1");
         leader1.receiveBudget(getSettingValue("init_budget"));
         for(int i = 0; i < 2; i++){

@@ -1,5 +1,5 @@
 package GameState.BotLeaderStrategy;
-import GameState.Game.Pair;
+import DataStructure.Pair;
 import GameState.GameMode.Game;
 import GameState.Leader.Leader;
 import java.util.List;
@@ -17,12 +17,10 @@ public class RandomizedSpawnStrategy implements SpawnMinionStrategy{
 
     @Override
     public void spawnMinion(Leader leader, double budget, Game game, List<Pair<Long, Long>> ownHex) {
-        //System.out.println("Own Hex:" + ownHex.size());
         Random rand = new Random();
         float change = rand.nextFloat();
         if(change > spawnChange) return;
         List<Pair<Long, Long>> availableHexPos = ownHex.stream().filter((pos) -> !game.getHexAt(pos).hasMinionOnHex()).toList();
-        //System.out.println("Available Hex:" + availableHexPos.size());
         if (availableHexPos.isEmpty()) return;
         int indexToSpawn = rand.nextInt(availableHexPos.size());
         List<String> availableKind = game.availableMinions();

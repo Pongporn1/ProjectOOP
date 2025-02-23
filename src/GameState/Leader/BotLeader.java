@@ -1,6 +1,7 @@
 package GameState.Leader;
 
 import GameState.BotLeaderStrategy.BuyHexStrategy;
+import GameState.BotLeaderStrategy.RandomizedBuyHexStrategy;
 import GameState.BotLeaderStrategy.RandomizedSpawnStrategy;
 import GameState.BotLeaderStrategy.SpawnMinionStrategy;
 import GameState.GameMode.Game;
@@ -13,6 +14,7 @@ public class BotLeader extends Leader{
     public BotLeader(Game game, String leaderName, String topordown) {
         super(game, leaderName,topordown);
         spawnMinionStrategy = new RandomizedSpawnStrategy();
+        buyHexStrategy = new RandomizedBuyHexStrategy();
     }
 
     @Override
@@ -23,6 +25,6 @@ public class BotLeader extends Leader{
 
     @Override
     public void buyHexState() throws Exception {
-        if(buyHexStrategy != null) buyHexStrategy.buyHex();
+        if(buyHexStrategy != null) buyHexStrategy.buyHex(this, budget, game, ownHexes);
     }
 }

@@ -1,7 +1,7 @@
 package GameState.GameMode;
 
 import AST.Strategy;
-import GameState.Game.*;
+import DataStructure.Pair;
 import GameState.Leader.*;
 import java.util.Map;
 
@@ -9,7 +9,8 @@ public class SoloMode extends Game{
 
     public SoloMode(Map<String, Pair<Strategy, Long>> minionsStrategy){
         super(minionsStrategy);
-        leader1 = new PlayerLeader(this, "Player", "1");
+        leader1 = new PlayerLeader(this, "Player", "P");
+        leader1.receiveBudget(getSettingValue("init_budget"));
         for(int i = 0; i < 2; i++){
             for(int j = 0; j < 3 - i; j++){
                 setGridOwner(i, j, leader1);
@@ -17,7 +18,8 @@ public class SoloMode extends Game{
             }
         }
 
-        leader2 = new BotLeader(this, "Bot", "2");
+        leader2 = new BotLeader(this, "Bot", "B");
+        leader2.receiveBudget(getSettingValue("init_budget"));
         for(int i = 7; i > 5; i--){
             for(int j = 7; j > 11 - i; j--){
                 setGridOwner(i, j, leader2);

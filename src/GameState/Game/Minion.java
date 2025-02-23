@@ -1,5 +1,6 @@
 package GameState.Game;
 
+import DataStructure.Pair;
 import GameState.GameMode.Game;
 import GameState.Leader.Leader;
 

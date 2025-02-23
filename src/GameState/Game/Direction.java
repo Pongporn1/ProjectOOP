@@ -1,5 +1,7 @@
 package GameState.Game;
 
+import DataStructure.Pair;
+
 import java.util.function.Function;
 
 public enum Direction {
