@@ -1,7 +1,7 @@
 package GameState.GameMode;
 
 import AST.Strategy;
-import GameState.Game.*;
+import DataStructure.Pair;
 import GameState.Leader.*;
 import java.util.Map;
 

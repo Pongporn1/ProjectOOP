@@ -1,4 +1,4 @@
-package GameState.Game;
+package DataStructure;
 
 public class Pair <T, U>{
     private T first;
@@ -26,6 +26,14 @@ public class Pair <T, U>{
 
     public void setSecond(U second){
         this.second = second;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Pair){
+            return obj.equals(first) && obj.equals(second);
+        }
+        return false;
     }
 
     @Override

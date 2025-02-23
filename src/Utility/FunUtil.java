@@ -1,6 +1,6 @@
 package Utility;
 
-import GameState.Game.Pair;
+import DataStructure.Pair;
 
 import java.lang.Number;
 import java.util.List;

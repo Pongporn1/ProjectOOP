@@ -1,7 +1,6 @@
 package GameState.BotLeaderStrategy;
 
-import GameState.Game.Hex;
-import GameState.Game.Pair;
+import DataStructure.Pair;
 import GameState.GameMode.Game;
 import GameState.Leader.Leader;
 

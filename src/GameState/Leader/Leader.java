@@ -1,5 +1,6 @@
 package GameState.Leader;
 
+import DataStructure.Pair;
 import GameState.GameMode.Game;
 import GameState.Game.*;
 
@@ -92,12 +93,18 @@ public abstract class Leader {
                 }
                 System.out.println();
                 System.out.print("What type of minion to spawn: ");
+                System.out.println();
                 String kindToSpawn = sc.nextLine();
                 if(!game.availableMinions().contains(kindToSpawn)){
                     System.out.println("Minion doesn't exist");
                     continue;
                 }
+                game.printShiftPositionBoard();
                 System.out.println("where you want to spawn minion");
+                System.out.println("Available Position");
+                for (Pair<Long, Long> ownHex : ownHexes) {
+                    System.out.print("(" + ownHex.getFirst() + ", " + ownHex.getSecond() + ") ");
+                }
                 long I1 = sc.nextLong();
                 long I2 = sc.nextLong();
                 if (spawnMinionAt(Pair.of(I1, I2), kindToSpawn)) {
@@ -126,7 +133,7 @@ public abstract class Leader {
         }
     }
 
-    public boolean buyHex(Pair<Long, Long> hexPosition) throws Exception { //tempo Pair<Integer, Integer> hexPosition
+    public boolean buyHex(Pair<Long, Long> hexPosition) { //tempo Pair<Integer, Integer> hexPosition
         if (budget < game.getSettingValue("hex_purchase_cost")
                 || game.hasMinionAt(hexPosition.getFirst(), hexPosition.getSecond())
                 || game.getHexAt(hexPosition).hasOwner())
