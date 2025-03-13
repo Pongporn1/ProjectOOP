@@ -1,4 +1,4 @@
-* commit 3855ba14761d71a8258c6e731bf2e24c3e018753
+﻿* commit 3855ba14761d71a8258c6e731bf2e24c3e018753
 | Author: Archiash <archiash.legacy@gmail.com>
 | Date:   Sun Feb 23 18:06:03 2025 +0700
 | 
@@ -121,7 +121,8 @@
 | | | Author: GUSTGUSTS <141816627+GUSTGUSTS@users.noreply.github.com>
 | | | Date:   Wed Feb 5 10:04:59 2025 +0700
 | | | 
-| | |     gust Push03
+| | |     gust Push03 (modify later: gust Push1,2,3 is method and variable in class and some in-            | | |     main example function show board in game,buyable-hex,buyhex,buyminionandplace,etc)
+| | |        
 | | | 
 | | * commit 44e8419589278a82b6ffb24af190cc0996fb6c1d
 | |/  Author: GUSTGUSTS <141816627+GUSTGUSTS@users.noreply.github.com>
