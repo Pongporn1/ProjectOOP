@@ -76,6 +76,10 @@ public abstract class Leader {
         spawnMinionState();
     }
 
+    public int getOwnHexAmount(){
+        return ownHexes.size();
+    }
+
     public void turnEnd() throws Exception {
         executeMinionsStrategy();
     }

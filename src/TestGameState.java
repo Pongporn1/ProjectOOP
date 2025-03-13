@@ -107,7 +107,7 @@ public class TestGameState {
 
         Map<String, Pair<Strategy, Long>> minionKinds = new HashMap<>();
         minionKinds.put("Proto", Pair.of(strategy, 0L));
-        Game game = new SoloMode(minionKinds);
+        Game game = new SoloMode(minionKinds, "");
         game.runGame();
     }
 }

@@ -7,7 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class User {
-    private String username;
-    private String sessionId;
+public class MinionItem {
+    private String name;
+    private long defense;
+    private String script;
+    private int imageId;
 }

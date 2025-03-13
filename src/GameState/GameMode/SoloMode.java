@@ -7,9 +7,9 @@ import java.util.Map;
 
 public class SoloMode extends Game{
 
-    public SoloMode(Map<String, Pair<Strategy, Long>> minionsStrategy){
+    public SoloMode(Map<String, Pair<Strategy, Long>> minionsStrategy, String leader){
         super(minionsStrategy);
-        leader1 = new PlayerLeader(this, "Player", "P");
+        leader1 = new PlayerLeader(this, leader, "" + leader.charAt(0));
         leader1.receiveBudget(getSettingValue("init_budget"));
         for(int i = 0; i < 2; i++){
             for(int j = 0; j < 3 - i; j++){

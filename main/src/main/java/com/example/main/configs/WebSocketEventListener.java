@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,7 @@ public class WebSocketEventListener {
         System.out.println("GOOD CONNECT");
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String username = (String) headerAccessor.getSessionAttributes().get("username");
-        userRepository.removeOnlineUser();
+        userRepository.removeUserBySessionId(event.getSessionId());
         messagingTemplate.convertAndSend("/topic/users", userRepository.getOnlineUser());
         if(username  != null) {
             ChatMessage chatMessage = ChatMessage.buildChatmessage(username + "has left the chat." , username , MessageType.LEAVE);
@@ -37,6 +38,7 @@ public class WebSocketEventListener {
     @EventListener
     public void handleWebSocketConnectedListener(SessionConnectEvent event){
         System.out.println("BAD CONNECT");
+
         userRepository.addOnlineUser();
         System.out.println(userRepository.getOnlineUser());
         messagingTemplate.convertAndSend("/topic/users", userRepository.getOnlineUser());

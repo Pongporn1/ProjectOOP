@@ -1,6 +1,7 @@
 package com.example.main.controllers;
 
 import com.example.main.dtos.CreateChatMessageBody;
+import com.example.main.dtos.CreateJoinRoomMessageBody;
 import com.example.main.dtos.CreateUserLoginBody;
 import com.example.main.models.ChatMessage;
 import com.example.main.models.MessageType;
@@ -25,20 +26,30 @@ public class UserLoginController {
         this.userRepository = userRepository;
     }
 
+    @MessageMapping("/test")
+    public void testDisconnect(SimpMessageHeaderAccessor headerAccessor){
+        System.out.println("testDisconnect");
+    }
+
     @MessageMapping("/login")
     public void login(CreateUserLoginBody createUserLoginBody, SimpMessageHeaderAccessor headerAccessor){
         System.out.println("Login");
+        System.out.println(headerAccessor);
         if (userRepository.haveUsername(createUserLoginBody.getUsername())){
-            User user = new User("Username already exists");
+            User user = new User("Username already exists", "");
             messagingTemplate.convertAndSend("/topic/connected-"+createUserLoginBody.getUsername(),user );
             return;
         }
-        User user = new User(createUserLoginBody.getUsername());
+
+        if(createUserLoginBody.getUsername().isEmpty()){
+            User user = new User("Username can't be empty", "");
+            messagingTemplate.convertAndSend("/topic/connected-"+createUserLoginBody.getUsername(),user );
+            return;
+        }
+        User user = new User(createUserLoginBody.getUsername(), headerAccessor.getSessionId());
         userRepository.addUser(user);
         messagingTemplate.convertAndSend("/topic/connected-"+createUserLoginBody.getUsername(),user );
     }
 
-    public void confirmLogin(){
 
-    }
 }

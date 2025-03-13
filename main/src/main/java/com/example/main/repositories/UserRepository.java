@@ -25,9 +25,13 @@ public class UserRepository {
         onlineUser--;
     }
 
+    public void removeUserBySessionId(String sessionId) {
+        System.out.println(userList.stream().filter(u -> u.getSessionId().equals(sessionId)).findFirst().get().getUsername() + " Disconnected");
+        userList.removeIf(user -> user.getSessionId().equals(sessionId));
+    }
+
     public int getOnlineUser(){
-        System.out.println("GETGET");
-        return onlineUser;
+        return 0;
     }
 
     public void addUser(User user) {
