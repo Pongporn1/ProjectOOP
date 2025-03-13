@@ -3,6 +3,7 @@ package Utility;
 import DataStructure.Pair;
 
 import java.lang.Number;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -12,6 +13,14 @@ public class FunUtil {
         U result = identity;
         for (T t : ls) {
             result = accumulator.apply(new Pair<>(result, t));
+        }
+        return result;
+    }
+
+    public static <T, U> List<U> map(Function<T, U> f, List<T> ls) {
+        List<U> result = new ArrayList<>();
+        for (T t : ls) {
+            result.add(f.apply(t));
         }
         return result;
     }

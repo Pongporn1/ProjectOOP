@@ -10,9 +10,6 @@ import java.util.Map;
 
 public class Main {
 
-    public static void main(String[] args) throws Exception {
-        TestSoloMde();
-    }
 
     public void T1() {
         String a = """
@@ -132,7 +129,7 @@ public class Main {
             System.out.println(sb);
             Map<String, Pair<Strategy, Long>> validMinions = new HashMap<>();
             validMinions.put("Proto", Pair.of(strategy2, 0L));
-            Game game = new DuelMode(validMinions);
+            Game game = new DuelMode(validMinions, "","");
             game.runGame();
         } catch (Exception e) {
             System.out.println(e);
@@ -185,7 +182,7 @@ public class Main {
 
         Map<String, Pair<Strategy, Long>> minionKinds = new HashMap<>();
         minionKinds.put("Proto", Pair.of(strategy, 0L));
-        Game game = new SoloMode(minionKinds);
+        Game game = new SoloMode(minionKinds,"");
         game.runGame();
     }
 }

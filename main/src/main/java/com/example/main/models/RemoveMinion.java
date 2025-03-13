@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
+@AllArgsConstructor
 @Getter
 @Setter
-@AllArgsConstructor
-public class User {
-    private String username;
-    private String sessionId;
+public class RemoveMinion {
+    List<MinionItem> minions;
+    int index;
+
 }

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class User {
+public class ConfirmMessage {
     private String username;
-    private String sessionId;
+    private boolean confirmed;
 }

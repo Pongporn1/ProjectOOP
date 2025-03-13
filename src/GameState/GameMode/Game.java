@@ -376,6 +376,7 @@ public abstract class Game {
 
     public Minion spawnMinion(long row, long col, String minionType, Leader owner) {//??????
         Minion minion = new Minion(this, Pair.of(row, col), owner, minionType, minionKinds.get(minionType).getSecond());
+        System.out.println(minion);
         getHexAt((int) row, (int) col).setMinionOnHex(minion);
         return minion;
     }

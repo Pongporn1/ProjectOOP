@@ -47,7 +47,7 @@ public class ChatController {
     @SendToUser("/queue/connected")
     public User addUser(CreateChatMessageBody createChatMessageBody , SimpMessageHeaderAccessor headerAccessor){
         String username = "Dragon";//createChatMessageBody.getSender();
-        User user = new User(username);
+        User user = new User(username, headerAccessor.getSessionId());
         String message = createChatMessageBody.getMessage();
         userRepository.addUser(user);
         MessageType messageType = createChatMessageBody.getType();
