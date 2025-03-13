@@ -82,6 +82,7 @@ public class GameRoomRepository {
 
     public GameData getGameData(String roomId) {
         RoomItem room = getRoom(roomId);
-        return room.getGameData();
+ //       return room.getGameData();
+    return null;
     }
 }

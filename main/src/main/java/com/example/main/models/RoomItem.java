@@ -59,18 +59,18 @@ public class RoomItem {
         return new MinionHex(hex.hasMinionOnHex() ? hex.getMinionOnHex().getMinionType():"None", hex.hasMinionOnHex() ? hex.getMinionOnHex().getOwner().getLeaderName() : "None");
     }
 
-    public GameData getGameData(){
-        Hex[][] board = game.getBoard();
-        String[][] owner = (String[][]) Arrays.stream(board).map((r) -> Arrays.stream(r).map((c) -> c.getLeader().getLeaderName()).toArray()).toArray();
-        MinionHex[][] minionsHex = (MinionHex[][]) Arrays.stream(board).map((r) -> Arrays.stream(r).map(this::hexToMinionHex).toArray()).toArray();
-        Leader leader1 = game.getFirstLeader();
-        Leader leader2 = game.getSecondLeader();
-        GameData gameData = new GameData(owner, minionsHex, new HashMap<>(){{
-            put(leader1.getLeaderName(), new LeaderData(leader1.getLeaderName(), leader1.getBudget(), leader1.getMinionList().size(), leader1.getOwnHexAmount()));
-            put(leader2.getLeaderName(), new LeaderData(leader2.getLeaderName(), leader2.getBudget(), leader2.getMinionList().size(), leader2.getOwnHexAmount()));
-        }});
-        return gameData;
-    }
+//    public GameData getGameData(){
+//        Hex[][] board = game.getBoard();
+//        String[][] owner = (String[][]) Arrays.stream(board).map((r) -> Arrays.stream(r).map((c) -> c.getLeader().getLeaderName()).toArray()).toArray();
+//        MinionHex[][] minionsHex = (MinionHex[][]) Arrays.stream(board).map((r) -> Arrays.stream(r).map(this::hexToMinionHex).toArray()).toArray();
+//        Leader leader1 = game.getFirstLeader();
+//        Leader leader2 = game.getSecondLeader();
+//        GameData gameData = new GameData(owner, minionsHex, new HashMap<>(){{
+//            put(leader1.getLeaderName(), new LeaderData(leader1.getLeaderName(), leader1.getBudget(), leader1.getMinionList().size(), leader1.getOwnHexAmount()));
+//            put(leader2.getLeaderName(), new LeaderData(leader2.getLeaderName(), leader2.getBudget(), leader2.getMinionList().size(), leader2.getOwnHexAmount()));
+//        }});
+//        return gameData;
+//    }
 
     public void createGame(Map<String, Pair<Strategy, Long>> minions) {
         if(gameMode.equals("auto")){

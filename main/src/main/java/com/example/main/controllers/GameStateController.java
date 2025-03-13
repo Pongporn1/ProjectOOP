@@ -38,7 +38,7 @@ public class GameStateController {
         System.out.println(minionType);
         System.out.println(row);
         System.out.println(col);
-        GameData gameData = gameRoomRepository.getGameData(roomId);
+       // GameData gameData = gameRoomRepository.getGameData(roomId);
 //        gameRoomRepository.getRoom(roomId).getGame();
 //        messagingTemplate.convertAndSend("/topic/game-"+roomId+"/spawn", minionType);
     }
