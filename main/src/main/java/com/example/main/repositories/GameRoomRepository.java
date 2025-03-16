@@ -1,8 +1,10 @@
 package com.example.main.repositories;
 
-import GameState.GameMode.DuelMode;
-import GameState.GameMode.Game;
-import GameState.Leader.Leader;
+import game.DataStructure.Pair;
+import game.GameState.Game.Minion;
+import game.GameState.GameMode.DuelMode;
+import game.GameState.GameMode.Game;
+import game.GameState.Leader.Leader;
 import com.example.main.models.GameData;
 import com.example.main.models.MinionItem;
 import com.example.main.models.RoomItem;
@@ -68,21 +70,41 @@ public class GameRoomRepository {
         return room.removeMinion(index) != null;
     }
 
-    public boolean spawnMinion(String roomId, String owner, String minionType, int row, int col){
+    public Pair<Boolean, List<GameData>> spawnMinion(String roomId, String owner, String minionType, int row, int col){
         RoomItem room = getRoom(roomId);
-        if(room == null) return false;
+        if(room == null) return Pair.of(false, null);
         Leader leader = null;
         if(room.getLeader1().equals(owner)) {
             leader = room.getGame().getFirstLeader();
         }else if(room.getLeader2().equals(owner)) {
             leader = room.getGame().getSecondLeader();
         }
-        return null != room.getGame().spawnMinion(row, col, minionType, leader);
+        Pair<Boolean, List<GameData>> result = leader.spawnMinionAt(Pair.of((long) row, (long) col), minionType);
+        return result;
+    }
+
+    public Pair<Boolean, List<GameData>> buyHex(String roomId, int row, int col, String leaderName){
+        RoomItem room = getRoom(roomId);
+        if(room == null) return Pair.of(false, null);
+        Leader leader = null;
+        if(room.getLeader1().equals(leaderName)) {
+            leader = room.getGame().getFirstLeader();
+        }else if(room.getLeader2().equals(leaderName)) {
+            leader = room.getGame().getSecondLeader();
+        }
+        Pair<Boolean, List<GameData>> result = leader.buyHex(Pair.of((long) row, (long) col));
+        return result;
     }
 
     public GameData getGameData(String roomId) {
         RoomItem room = getRoom(roomId);
- //       return room.getGameData();
-    return null;
+        if(room == null) return null;
+        return room.getGame().getGameData();
+    }
+
+    public List<GameData> skipState(String roomId) {
+        RoomItem room = getRoom(roomId);
+        if(room == null) return new ArrayList<>();
+        return room.getGame().skipState();
     }
 }

@@ -1,8 +1,8 @@
 package com.example.main.controllers;
 
-import AST.Strategy;
-import DataStructure.Pair;
-import Parser.StrategyParser;
+import game.AST.Strategy;
+import game.DataStructure.Pair;
+import game.Parser.StrategyParser;
 import com.example.main.dtos.*;
 import com.example.main.models.*;
 import com.example.main.repositories.GameRoomRepository;
@@ -244,7 +244,7 @@ public class CreateGameController {
         System.out.println(conf);
         boolean confirmed = gameRoomRepository.confirmInRoom(roomId, user, conf);
         RoomItem room = gameRoomRepository.getRoom(roomId);
-        if(room.isConfirm()){
+        if(room.isConfirm() || !room.getGameMode().equals("duel")){
             room.resetConfirm();
             messagingTemplate.convertAndSend("/topic/room-" + roomId, room, new HashMap<>(){{put("command", "next");}});
         }else
@@ -264,7 +264,7 @@ public class CreateGameController {
         boolean confirmed = gameRoomRepository.confirmInRoom(roomId, user, conf);
         RoomItem room = gameRoomRepository.getRoom(roomId);
         System.out.println("IsConfirm: " + room.isConfirm());
-        if(room.isConfirm()){
+        if(room.isConfirm() || !room.getGameMode().equals("duel")){
             room.resetConfirm();
             List<MinionItem> minionItems = room.getMinions();
             String inValid = "";

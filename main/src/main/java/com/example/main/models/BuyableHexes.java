@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
+import java.util.List;
+
 @Getter
+@Setter
 @AllArgsConstructor
-public class MinionHex {
-    private String minionType;
-    private String owner;
+public class BuyableHexes {
+    private List<HexPos> buyableHexes;
 }

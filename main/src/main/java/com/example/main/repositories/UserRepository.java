@@ -26,7 +26,6 @@ public class UserRepository {
     }
 
     public void removeUserBySessionId(String sessionId) {
-        System.out.println(userList.stream().filter(u -> u.getSessionId().equals(sessionId)).findFirst().get().getUsername() + " Disconnected");
         userList.removeIf(user -> user.getSessionId().equals(sessionId));
     }
 
