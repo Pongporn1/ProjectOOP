@@ -1,14 +1,13 @@
 package com.example.main.models;
 
-import AST.Strategy;
-import DataStructure.Pair;
-import GameState.Game.Hex;
-import GameState.Game.Minion;
-import GameState.GameMode.AutoMode;
-import GameState.GameMode.DuelMode;
-import GameState.GameMode.Game;
-import GameState.GameMode.SoloMode;
-import GameState.Leader.Leader;
+import game.AST.Strategy;
+import game.DataStructure.Pair;
+import game.GameState.Game.Hex;
+import game.GameState.GameMode.AutoMode;
+import game.GameState.GameMode.DuelMode;
+import game.GameState.GameMode.Game;
+import game.GameState.GameMode.SoloMode;
+import game.GameState.Leader.Leader;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,23 +53,7 @@ public class RoomItem {
         minions.get(index).setName(name);
     }
 
-    private MinionHex hexToMinionHex(Hex hex){
 
-        return new MinionHex(hex.hasMinionOnHex() ? hex.getMinionOnHex().getMinionType():"None", hex.hasMinionOnHex() ? hex.getMinionOnHex().getOwner().getLeaderName() : "None");
-    }
-
-//    public GameData getGameData(){
-//        Hex[][] board = game.getBoard();
-//        String[][] owner = (String[][]) Arrays.stream(board).map((r) -> Arrays.stream(r).map((c) -> c.getLeader().getLeaderName()).toArray()).toArray();
-//        MinionHex[][] minionsHex = (MinionHex[][]) Arrays.stream(board).map((r) -> Arrays.stream(r).map(this::hexToMinionHex).toArray()).toArray();
-//        Leader leader1 = game.getFirstLeader();
-//        Leader leader2 = game.getSecondLeader();
-//        GameData gameData = new GameData(owner, minionsHex, new HashMap<>(){{
-//            put(leader1.getLeaderName(), new LeaderData(leader1.getLeaderName(), leader1.getBudget(), leader1.getMinionList().size(), leader1.getOwnHexAmount()));
-//            put(leader2.getLeaderName(), new LeaderData(leader2.getLeaderName(), leader2.getBudget(), leader2.getMinionList().size(), leader2.getOwnHexAmount()));
-//        }});
-//        return gameData;
-//    }
 
     public void createGame(Map<String, Pair<Strategy, Long>> minions) {
         if(gameMode.equals("auto")){
@@ -82,6 +65,7 @@ public class RoomItem {
         if(gameMode.equals("duel")){
             game = new DuelMode(minions, leader1, leader2);
         }
+        game.setConfig(config);
     }
 
     public List<MinionItem> getMinionsList(){
@@ -114,10 +98,12 @@ public class RoomItem {
     }
 
     public static RoomItem buildRoom(String id, String gameMode) {
+        String leader1Name = gameMode.equals("auto") ? "Bot1" : "";
+        String leader2Name = gameMode.equals("auto") ? "Bot2" : gameMode.equals("solitaire") ? "Bot" : "";
         return new RoomItem(id, new HashMap<>(), new HashMap<>(),new ArrayList<>() {{
             add(new MinionItem("Spear", 10, "", 1));
         }}
-                , new ArrayList<>(), null, gameMode,"", false, "", false);
+                , new ArrayList<>(), null, gameMode,leader1Name, false, leader2Name, false);
     }
 
     public void joinRoom(String username) {

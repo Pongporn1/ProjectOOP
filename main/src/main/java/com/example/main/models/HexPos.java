@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
-public class MinionHex {
-    private String minionType;
-    private String owner;
+public class HexPos{
+    private int row;
+    private int col;
 }

@@ -1,5 +1,5 @@
 spawn_cost=1000
-hex_purchase_cost=3000
+hex_purchase_cost=10000
 init_budget=10000
 init_hp=100
 turn_budget=100
