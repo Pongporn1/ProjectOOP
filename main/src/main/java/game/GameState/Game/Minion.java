@@ -66,27 +66,27 @@ public class Minion {
     public void getDamage(Minion attacker, long damage){
         health = Math.max(0, health - Math.max(1, damage - defense));
         if(health == 0){
-            System.out.println(owner.getLeaderName() + "'s " + minionType + " " + position + " was destroy");
-            System.out.println("by " + attacker.owner.getLeaderName() + "'s " + attacker.minionType + " " + attacker.position);
+            //System.out.println(owner.getLeaderName() + "'s " + minionType + " " + position + " was destroy");
+            //System.out.println("by " + attacker.owner.getLeaderName() + "'s " + attacker.minionType + " " + attacker.position);
             game.destroyMinion(this);
         }
     }
 
     public boolean move(Direction direction) throws Exception {
-        System.out.print(position + " move " + direction + " to ");
+        //System.out.print(position + " move " + direction + " to ");
         Pair<Long, Long> transform = (direction.transformDirection()).apply(position.getSecond());
         try {
             if (game.moveMinionByOffset(this, transform)) {
                 position.setFirst(position.getFirst() + transform.getFirst());
                 position.setSecond(position.getSecond() + transform.getSecond());
-                System.out.println(position);
+               // System.out.println(position);
                 return true;
             }
         }catch (Exception e) {
-            System.out.println(e);
+            //  System.out.println(e);
             return false;
         }
-        System.out.println();
+        //System.out.println();
         return false;
     }
 

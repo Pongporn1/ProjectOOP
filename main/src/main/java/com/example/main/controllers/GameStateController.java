@@ -17,6 +17,7 @@ import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.broker.AbstractBrokerMessageHandler;
 import org.springframework.stereotype.Controller;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,20 +49,22 @@ public class GameStateController {
         System.out.println(col);
         if(!m.getFirst()){
             System.out.println("Error");
+            return;
         }
         GameData gameData = gameRoomRepository.getGameData(roomId);
 
-        messagingTemplate.convertAndSend("/topic/game-"+roomId, gameData, new HashMap<>(){{put("command", "update");}});
+        //messagingTemplate.convertAndSend("/topic/game-"+roomId, Arrays.asList(gameData), new HashMap<>(){{put("command", "update");}});
         messagingTemplate.convertAndSend("/topic/game-"+roomId, m.getSecond(), new HashMap<>(){{put("command", "test");}});
     }
 
     @MessageMapping("/game/start")
     public void StartGame(CreateJoinRoomMessageBody joinRoomMessageBody, SimpMessageHeaderAccessor headerAccessor) {
         System.out.println("Start Game: " + headerAccessor.getNativeHeader("username").get(0) + " on " + joinRoomMessageBody.getRoomId() );
-        GameData gameData = gameRoomRepository.getGameData(joinRoomMessageBody.getRoomId());
+        //GameData gameData = gameRoomRepository.getGameData(joinRoomMessageBody.getRoomId());
         RoomItem room = gameRoomRepository.getRoom(joinRoomMessageBody.getRoomId());
-        messagingTemplate.convertAndSend("/topic/user-"+headerAccessor.getNativeHeader("username").get(0), room.getMinions(), new HashMap<>(){{put("command", "minionls");}});
-        messagingTemplate.convertAndSend("/topic/user-"+headerAccessor.getNativeHeader("username").get(0), gameData, new HashMap<>(){{put("command", "init");}});
+        List<GameData> datas = gameRoomRepository.startGame(joinRoomMessageBody.getRoomId(), messagingTemplate);
+        //messagingTemplate.convertAndSend("/topic/user-"+headerAccessor.getNativeHeader("username").get(0), room.getMinions(), new HashMap<>(){{put("command", "minionls");}});
+        //messagingTemplate.convertAndSend("/topic/game-"+joinRoomMessageBody.getRoomId(), datas, new HashMap<>(){{put("command", "test");}});
     }
 
     @MessageMapping("/game/buy")
@@ -71,6 +74,10 @@ public class GameStateController {
         String roomId = createBuyHexMessage.getRoomId();
         String owner = headerAccessor.getNativeHeader("username").get(0);
         Pair<Boolean, List<GameData>> m =gameRoomRepository.buyHex(roomId, row, col, owner);
+        if(!m.getFirst()){
+            System.out.println("Error");
+            return;
+        }
         GameData gameData = gameRoomRepository.getGameData(roomId);
         messagingTemplate.convertAndSend("/topic/game-"+roomId, gameData, new HashMap<>(){{put("command", "update");}});
         messagingTemplate.convertAndSend("/topic/game-"+roomId, m.getSecond(), new HashMap<>(){{put("command", "test");}});
@@ -78,9 +85,13 @@ public class GameStateController {
 
     @MessageMapping("/game/skip")
     public void Skip(CreateJoinRoomMessageBody skipMessageBody, SimpMessageHeaderAccessor headerAccessor) {
-        List<GameData> m = gameRoomRepository.skipState(skipMessageBody.getRoomId());
+        Pair<Boolean, List<GameData>> m = gameRoomRepository.skipState(skipMessageBody.getRoomId(), headerAccessor.getNativeHeader("username").get(0));
+        if(!m.getFirst()){
+            System.out.println("Error");
+            return;
+        }
         GameData gameData = gameRoomRepository.getGameData(skipMessageBody.getRoomId());
         messagingTemplate.convertAndSend("/topic/game-"+skipMessageBody.getRoomId(), gameData, new HashMap<>(){{put("command", "update");}});
-        messagingTemplate.convertAndSend("/topic/game-"+skipMessageBody.getRoomId(), m, new HashMap<>(){{put("command", "test");}});
+        messagingTemplate.convertAndSend("/topic/game-"+skipMessageBody.getRoomId(), m.getSecond(), new HashMap<>(){{put("command", "test");}});
     }
 }

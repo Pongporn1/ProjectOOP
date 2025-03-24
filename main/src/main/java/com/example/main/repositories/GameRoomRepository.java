@@ -8,12 +8,10 @@ import game.GameState.Leader.Leader;
 import com.example.main.models.GameData;
 import com.example.main.models.MinionItem;
 import com.example.main.models.RoomItem;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository("GameRoomRepository")
 public class GameRoomRepository {
@@ -72,11 +70,17 @@ public class GameRoomRepository {
 
     public Pair<Boolean, List<GameData>> spawnMinion(String roomId, String owner, String minionType, int row, int col){
         RoomItem room = getRoom(roomId);
+        Pair<Integer, String> state = room.getGame().getState();
+        System.out.println("State");
+        System.out.println(state.getFirst());
+        System.out.println(state.getSecond());
         if(room == null) return Pair.of(false, null);
         Leader leader = null;
         if(room.getLeader1().equals(owner)) {
+            if(state.getFirst() != 1 || !(state.getSecond().equals("spawning") || state.getSecond().equals("first_spawning"))) return Pair.of(false, null);
             leader = room.getGame().getFirstLeader();
         }else if(room.getLeader2().equals(owner)) {
+            if(state.getFirst() != 2 || !(state.getSecond().equals("spawning") || state.getSecond().equals("first_spawning"))) return Pair.of(false, null);
             leader = room.getGame().getSecondLeader();
         }
         Pair<Boolean, List<GameData>> result = leader.spawnMinionAt(Pair.of((long) row, (long) col), minionType);
@@ -85,11 +89,14 @@ public class GameRoomRepository {
 
     public Pair<Boolean, List<GameData>> buyHex(String roomId, int row, int col, String leaderName){
         RoomItem room = getRoom(roomId);
+        Pair<Integer, String> state = room.getGame().getState();
         if(room == null) return Pair.of(false, null);
         Leader leader = null;
         if(room.getLeader1().equals(leaderName)) {
+            if(state.getFirst() != 1 || !state.getSecond().equals("buying")) return Pair.of(false, null);
             leader = room.getGame().getFirstLeader();
         }else if(room.getLeader2().equals(leaderName)) {
+            if(state.getFirst() != 2 || !state.getSecond().equals("buying")) return Pair.of(false, null);
             leader = room.getGame().getSecondLeader();
         }
         Pair<Boolean, List<GameData>> result = leader.buyHex(Pair.of((long) row, (long) col));
@@ -102,9 +109,31 @@ public class GameRoomRepository {
         return room.getGame().getGameData();
     }
 
-    public List<GameData> skipState(String roomId) {
+    public Pair<Boolean, List<GameData>> skipState(String roomId, String leaderName) {
         RoomItem room = getRoom(roomId);
-        if(room == null) return new ArrayList<>();
-        return room.getGame().skipState();
+        Pair<Integer, String> state = room.getGame().getState();
+        if(room == null) return Pair.of(false, null);
+        Leader leader = null;
+        if(room.getLeader1().equals(leaderName)) {
+            if(state.getFirst() != 1) return Pair.of(false, null);
+            leader = room.getGame().getFirstLeader();
+        }else if(room.getLeader2().equals(leaderName)) {
+            if(state.getFirst() != 2) return Pair.of(false, null);
+            leader = room.getGame().getSecondLeader();
+        }
+        return Pair.of(true, room.getGame().skipState());
+    }
+
+    public List<GameData> startGame(String roomId, SimpMessageSendingOperations sender) {
+        RoomItem room = getRoom(roomId);
+        if(room == null) return null;
+        room.getGame().setSender(sender);
+        room.getGame().setRoomId(roomId);
+        if(room.getGameMode().equals("auto")) {
+            List<GameData> states = room.getGame().processGame();
+            return states;
+        }
+        room.getGame().sendGameData(roomId);
+        return Arrays.asList(room.getGame().getGameData());
     }
 }
