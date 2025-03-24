@@ -52,9 +52,9 @@ public abstract class Leader {
 
 
     public void receiveBudget(double amount){
-        System.out.println("Receive: " + amount);
+        //System.out.println("Receive: " + amount);
         if(budget + amount > game.getSettingValue("max_budget")){
-            System.out.println("Over Budget");
+            //System.out.println("Over Budget");
             budget = game.getSettingValue("max_budget");
             return;
         }
@@ -161,8 +161,8 @@ public abstract class Leader {
 //    }
 
     public Pair<Boolean, List<GameData>> buyHex(Pair<Long, Long> hexPosition) { //tempo Pair<Integer, Integer> hexPosition
-        System.out.println(leaderName + " buying hex");
-        System.out.println(budget + " / " + game.getSettingValue("hex_purchase_cost"));
+        //System.out.println(leaderName + " buying hex");
+        //System.out.println(budget + " / " + game.getSettingValue("hex_purchase_cost"));
         if (budget < game.getSettingValue("hex_purchase_cost") || game.getHexAt(hexPosition).hasOwner()){
             return Pair.of(false, null);
         }
@@ -244,7 +244,7 @@ public abstract class Leader {
                 || !game.getHexAt(hexPosition).getLeader().equals(this)
                 || ownedMinions.size() >= game.getSettingValue("max_spawns")
         ) {
-            System.out.println("Unable to spawn minion");
+            //System.out.println("Unable to spawn minion");
             return Pair.of(false, null);
         }
 

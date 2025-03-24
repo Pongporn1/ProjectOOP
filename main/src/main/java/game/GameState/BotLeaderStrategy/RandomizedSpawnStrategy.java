@@ -29,7 +29,7 @@ public class RandomizedSpawnStrategy implements SpawnMinionStrategy {
         int indexToSpawn = rand.nextInt(availableHexPos.size());
         List<String> availableKind = game.availableMinions();
         int kindToSpawn = rand.nextInt(availableKind.size());
-        System.out.println(leader.getLeaderName() + " spawn " + availableKind.get(kindToSpawn) + " at " + availableHexPos.get(indexToSpawn));
+        //System.out.println(leader.getLeaderName() + " spawn " + availableKind.get(kindToSpawn) + " at " + availableHexPos.get(indexToSpawn));
         return leader.spawnMinionAt(availableHexPos.get(indexToSpawn), availableKind.get(kindToSpawn));
     }
 }

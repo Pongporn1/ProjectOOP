@@ -11,6 +11,9 @@ import game.GameState.Game.Hex;
 import game.GameState.Game.Minion;
 import game.GameState.Leader.Leader;
 import game.Utility.Number;
+import lombok.Setter;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,6 +34,11 @@ public abstract class Game {
     protected int rowAmount;
     protected String state;
     protected int turnOf;
+    @Setter
+    private SimpMessageSendingOperations sender;
+    @Setter
+    private String roomId;
+
 
     public Map<String, Pair<Strategy, Long>> getMinions(){
         return minionKinds;
@@ -65,7 +73,10 @@ public abstract class Game {
         return hex.hasOwner() ? hex.getLeader().getLeaderName() : "None";
     }
 
-
+    public void sendGameData(String roomId){
+        GameData data = getGameData();
+        sender.convertAndSend("/topic/game-"+roomId, Arrays.asList(data), new HashMap<>(){{put("command", "add");}});
+    }
 
     public GameData getGameData(){
         Hex[][] board = getBoard();
@@ -73,7 +84,7 @@ public abstract class Game {
         MinionHex[][] minionsHex = Arrays.stream(board).map((r) -> Arrays.stream(r).map(this::hexToMinionHex).toArray(MinionHex[]::new)).toArray(MinionHex[][]::new);
         Leader leader1 = getFirstLeader();
         Leader leader2 = getSecondLeader();
-        System.out.println(leader1.getMinionList());
+        //System.out.println(leader1.getMinionList());
         List<HexPos> leader1HexPos = buyableHex(leader1).stream().map((x) -> new HexPos(x.getPosition().getFirst(), x.getPosition().getSecond())).toList();
         List<HexPos> leader2HexPos = buyableHex(leader2).stream().map((x) -> new HexPos(x.getPosition().getFirst(), x.getPosition().getSecond())).toList();
         Pair<Integer, String> state = getState();
@@ -153,12 +164,18 @@ public abstract class Game {
 //                System.out.println(m.minionDetail());
 //            }
         }
-        CalculateMaxTurnResult();
+        CalculateResult();
     }
 
-    private void CalculateMaxTurnResult(){
+    private void CalculateResult(){
         List<Minion> leader1Minions = leader1.getMinionList();
         List<Minion> leader2Minions = leader2.getMinionList();
+
+        if(leader1Minions.isEmpty()) {
+            return;
+        }else if(leader2Minions.isEmpty()) {
+            return;
+        }
 
         long leader1MinionsHealth = foldl((current) ->  current.getFirst() + current.getSecond().getHealth(), 0L, leader1Minions );
         long leader2MinionsHealth = foldl((current) ->  current.getFirst() + current.getSecond().getHealth(), 0L, leader2Minions );
@@ -208,7 +225,7 @@ public abstract class Game {
      */
     public double calculateInterest(double budget) {
         double interestPercentage = calculateInterestPercentage(budget);
-        System.out.println("interest percentage: " + interestPercentage);
+       // System.out.println("interest percentage: " + interestPercentage);
         return interestPercentage * budget / 100.0;
     }
 
@@ -222,7 +239,7 @@ public abstract class Game {
         leader.receiveBudget(getSettingValue("turn_budget"));
         double budget = leader.getExactBudget();
         double interest = calculateInterest(budget);
-        System.out.println("interest: " + interest);
+       // System.out.println("interest: " + interest);
         leader.receiveBudget(interest);
     }
 
@@ -397,8 +414,8 @@ public abstract class Game {
         Pair<Long, Long> attackerPosition = attacker.getPosition();
         try {
             Pair<Long, Long> positionToAttack = getRelativePosition(attackerPosition, direction, 1);
-            System.out.println(direction);
-            System.out.println(attacker.getPosition() + " attack -> " + positionToAttack);
+            //System.out.println(direction);
+            //System.out.println(attacker.getPosition() + " attack -> " + positionToAttack);
             Hex hexToAttack = getHexAt(positionToAttack);
             return hexToAttack.getAttack(attacker, damage);
         }catch (Exception e) {
@@ -466,9 +483,13 @@ public abstract class Game {
         return data;
     }
 
+    public boolean isGameEnd(){
+        return leader1.getMinionList().isEmpty() || leader2.getMinionList().isEmpty() || turn == getSettingValue("max_turns");
+    }
+
     public Pair<Boolean, List<GameData>> spawnMinion(long row, long col, String minionType, Leader owner) {//??????
         Minion minion = new Minion(this, Pair.of(row, col), owner, minionType, minionKinds.get(minionType).getSecond());
-        System.out.println(minion);
+        //System.out.println(minion);
         getHexAt((int) row, (int) col).setMinionOnHex(minion);
         List<GameData> data = new ArrayList<>();
         owner.getMinionList().add((minion));
@@ -485,11 +506,88 @@ public abstract class Game {
         return Pair.of(true, data);
     }
 
-    public List<GameData> processGame() {
+    public GameData sprocessGame() {
         List<GameData> data = new ArrayList<>();
-        System.out.println(turnOf + ": " + state);
+        //System.out.println(turnOf + ": " + state);
+        try {
+            Thread.sleep(300);
+        }catch (Throwable ignored) {
+
+        }
         if(state.equals("first_spawning") && turnOf == 1){
             turnOf = 2;
+            if(this instanceof AutoMode) sendGameData(roomId);
+            data.addAll(leader2.spawnMinionState());
+            return getGameData();
+        }
+
+        if(state.equals("first_spawning") && turnOf == 2){
+            turnOf = 1;
+            state = "buying";
+            turn++;
+            giveInterest(leader1);
+            if(this instanceof AutoMode) sendGameData(roomId);
+            data.addAll(leader1.buyHexState());
+            return getGameData();
+        }
+
+        if(state.equals("spawning")){
+            if(turnOf == 1){
+                state = "execute";
+                if(this instanceof AutoMode) sendGameData(roomId);
+                data.addAll(executeMinions(leader1));
+            }else if(turnOf == 2){
+                state = "execute";
+                if(this instanceof AutoMode) sendGameData(roomId);
+                data.addAll(executeMinions(leader2));
+            }
+
+            if(isGameEnd()) {
+                CalculateResult();
+                System.out.println("Game ended");
+                return getGameData();
+            }
+
+            state = "buying";
+            turnOf = turnOf == 2 ? 1 : 2;
+
+            if(turnOf == 1) {
+                turn++;
+                giveInterest(leader1);
+                if(this instanceof AutoMode) sendGameData(roomId);
+                data.addAll(leader1.buyHexState());
+            }
+            else {
+                giveInterest(leader2);
+                if(this instanceof AutoMode) sendGameData(roomId);
+                data.addAll(leader2.buyHexState());
+            }
+
+            return getGameData();
+        }
+
+        if(state.equals("buying")){
+            state = "spawning";
+            if(this instanceof AutoMode) sendGameData(roomId);
+            //System.out.println(turnOf + ": " + state);
+            if(turnOf == 1) data.addAll(leader1.spawnMinionState());
+            else data.addAll(leader2.spawnMinionState());
+
+            return getGameData();
+        }
+        return getGameData();
+    }
+
+    public List<GameData> processGame() {
+        List<GameData> data = new ArrayList<>();
+        try {
+            Thread.sleep(300);
+        }catch (Throwable ignored) {
+
+        }
+        if(state.equals("first_spawning") && turnOf == 1){
+            turnOf = 2;
+            if(this instanceof AutoMode) sendGameData(roomId);
             data.addAll(leader2.spawnMinionState());
             return data;
         }
@@ -499,6 +597,7 @@ public abstract class Game {
             state = "buying";
             turn++;
             giveInterest(leader1);
+            if(this instanceof AutoMode) sendGameData(roomId);
             data.addAll(leader1.buyHexState());
             return data;
         }
@@ -506,10 +605,18 @@ public abstract class Game {
         if(state.equals("spawning")){
             if(turnOf == 1){
                 state = "execute";
+                if(this instanceof AutoMode) sendGameData(roomId);
                 data.addAll(executeMinions(leader1));
             }else if(turnOf == 2){
                 state = "execute";
+                if(this instanceof AutoMode) sendGameData(roomId);
                 data.addAll(executeMinions(leader2));
+            }
+
+            if(isGameEnd()) {
+                CalculateResult();
+                System.out.println("Game ended");
+                return data;
             }
 
             state = "buying";
@@ -518,10 +625,12 @@ public abstract class Game {
             if(turnOf == 1) {
                 turn++;
                 giveInterest(leader1);
+                if(this instanceof AutoMode) sendGameData(roomId);
                 data.addAll(leader1.buyHexState());
             }
             else {
                 giveInterest(leader2);
+                if(this instanceof AutoMode) sendGameData(roomId);
                 data.addAll(leader2.buyHexState());
             }
 
@@ -530,8 +639,8 @@ public abstract class Game {
 
         if(state.equals("buying")){
             state = "spawning";
-
-            System.out.println(turnOf + ": " + state);
+            if(this instanceof AutoMode) sendGameData(roomId);
+            //System.out.println(turnOf + ": " + state);
             if(turnOf == 1) data.addAll(leader1.spawnMinionState());
             else data.addAll(leader2.spawnMinionState());
 

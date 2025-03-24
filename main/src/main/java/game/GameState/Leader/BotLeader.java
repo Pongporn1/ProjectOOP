@@ -24,7 +24,7 @@ public class BotLeader extends Leader {
 
     @Override
     public List<GameData> spawnMinionState() {
-        System.out.println("Spawning Minion State");
+        //.out.println("Spawning Minion State");
         Pair<Boolean, List<GameData>> m = spawnMinionStrategy.spawnMinion(this, budget, game, ownHexes);
 
         if (!m.getFirst()){
