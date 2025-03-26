@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+#circle1:hover {
+  fill: blue;
+  
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.fnoi{
+  filter: contrast(100%) brightness(1000%);
+  background: linear-gradient(0deg, rgba(0,0,255,1), rgba(0,0,0,0)), url('/noise.svg');
+}
+
+.noise {
+  background: 
+    linear-gradient(to bottom, #0f0f0faa, #0f0f0f55  ), 
+      url(./../../noise.svg);
+  z-index: 100;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.1;
+  filter: grayscale(),;
+}
+
+
+.halftone {
+  --mask: linear-gradient(rgb(0 0 0), rgb(0 0 0 / 0.5));
+  --stop1: 3%;
+  --stop2: 90%;
+  
+  aspect-ratio: 1;
+  position: relative;
+  background: rgba(255, 255, 255, 0);
+  filter: contrast(50);
+}
+
+.halftone::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at center, white var(--stop1), transparent var(--stop2));
+  background-size: 1rem 1rem;
+  background-repeat: round;
+  background-position: center;
+  mask-image: var(--mask);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+
+.halftone:nth-child(odd)::after {
+  --bgSize: 2rem;
+  --bgPosition: calc(var(--bgSize) / 2);
+  --stop1: 10%;
+  --stop2: 10%;
+  --col: rgb(255, 115, 84);
+
+  background-repeat: inherit;
+  background-image: radial-gradient(circle at center, var(--col) var(--stop1), transparent var(--stop2)), radial-gradient(circle at center,var(--col) var(--stop1), transparent var(--stop2));
+  background-size: var(--bgSize) var(--bgSize);
+  background-position: 0 0, var(--bgPosition) var(--bgPosition);
+}
+
+
+
+.slide-in{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120%;
+  background-color: rgb(81, 94, 73);
+  transform-origin: bottom;
+}
+
+.slide-out{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color:  rgb(81, 94, 73);
+  transform-origin: top;
+}
+

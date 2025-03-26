@@ -1,0 +1,6 @@
+{
+  "/pages/join/page": "app/pages/join/page.js",
+  "/pages/setting/page": "app/pages/setting/page.js",
+  "/pages/create/page": "app/pages/create/page.js",
+  "/pages/Hexsweeper/page": "app/pages/Hexsweeper/page.js"
+}
