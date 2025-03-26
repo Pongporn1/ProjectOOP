@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/utils/useMousePositionx.js", "src/app/components/Header", "src/app/page.jsx", "src/app/components/Page.jsx", "src/app/page.jsx", "src/app/pages/join/page.jsx", "src/app/components/DND/Draggable.tsx", "src/app/components/InputFix.jsx", "src/app/components/InputFix.jsx", "src/app/components/InputFix.jsx", "src/app/components/InputFix.jsx"],
+  "exclude": ["node_modules"]
+}
